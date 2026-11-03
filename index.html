@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peoples Communication - Premium ISP Portal</title>
+    <title>Peoples Communication - ISP & TV Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -18,7 +18,7 @@
         }
         .matrix-text { animation: matrixGlow 1.5s infinite; }
 
-        /* অ্যাপ বা ব্রাউজারের সাইডের স্ক্রলবার হাইড করার CSS */
+        /* স্ক্রলবার হাইড করার CSS */
         ::-webkit-scrollbar {
             width: 0px;
             height: 0px;
@@ -28,16 +28,71 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
+        /* টিভি রিমোট ফোকাস স্টাইল */
+        .tv-focusable:focus, .tv-focusable.focused {
+            outline: 3px solid #e11d48 !important;
+            transform: scale(1.03);
+            background-color: #1e293b !important;
+        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans selection:bg-rose-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 font-sans selection:bg-rose-500 selection:text-white" onkeydown="handleTVRemote(event)">
+
+    <!-- Mode Selection Popup (First Launch / Reset) -->
+    <div id="modeSelectModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-8 shadow-2xl text-center space-y-6">
+            <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto text-3xl border border-rose-500/20 shadow-inner">
+                <i class="fa-solid fa-display"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-black text-white">মোড সিলেক্ট করুন</h2>
+                <p class="text-xs text-slate-400 mt-1">আপনি কি এই অ্যাপটি অ্যান্ড্রয়েড টিভিতে নাকি মোবাইলে ব্যবহার করছেন?</p>
+            </div>
+            <div class="grid grid-cols-1 gap-4">
+                <button onclick="setAppMode('tv')" class="tv-focusable bg-slate-950 hover:bg-rose-600 border border-slate-800 hover:border-rose-500 p-5 rounded-2xl transition flex items-center justify-between group text-left">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl group-hover:bg-white group-hover:text-rose-600 transition">
+                            <i class="fa-solid fa-tv"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base text-white">টিভি মোড (TV Mode)</h3>
+                            <p class="text-xs text-slate-400 group-hover:text-slate-200">শুধুমাত্র লাইভ টিভি ও রিমোট কন্ট্রোল ফিচার</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-white"></i>
+                </button>
+
+                <button onclick="setAppMode('mobile')" class="tv-focusable bg-slate-950 hover:bg-blue-600 border border-slate-800 hover:border-blue-500 p-5 rounded-2xl transition flex items-center justify-between group text-left">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl group-hover:bg-white group-hover:text-blue-600 transition">
+                            <i class="fa-solid fa-mobile-screen"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-base text-white">মোবাইল মোড (Mobile Mode)</h3>
+                            <p class="text-xs text-slate-400 group-hover:text-slate-200">সেলফ কেয়ার, বিল, প্যাকেজ ও সকল ফিচার</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-600 group-hover:text-white"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Update Notification Bar -->
+    <div id="updateBanner" class="bg-gradient-to-r from-rose-600 via-indigo-600 to-purple-600 text-white text-xs px-4 py-2.5 text-center font-semibold flex items-center justify-between shadow-lg z-40 sticky top-0">
+        <div class="flex items-center justify-center space-x-2 w-full truncate">
+            <i class="fa-solid fa-bullhorn animate-bounce text-yellow-300"></i>
+            <span><strong>আপডেট নোটিফিকেশন:</strong> নতুন রিমোট ফ্রেন্ডলি টিভি মোড যুক্ত হয়েছে। হটলাইন: <strong>01580-44506</strong></span>
+        </div>
+        <button onclick="document.getElementById('updateBanner').remove()" class="text-white hover:text-slate-200 ml-4 font-bold px-2 py-0.5 bg-black/20 rounded-lg"><i class="fa-solid fa-xmark"></i></button>
+    </div>
 
     <!-- Hacker Style Loading Screen -->
     <div id="hackerLoader" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center font-mono text-green-500 p-4 transition-opacity duration-700">
         <div class="text-center space-y-4 max-w-md w-full">
             <div class="text-4xl font-black tracking-widest matrix-text mb-2"><i class="fa-solid fa-terminal"></i> PEOPLES_SECURE</div>
-            <div class="text-xs text-green-400 bg-black/80 p-4 rounded-xl border border-green-800 text-left h-32 overflow-hidden shadow-2xl shadow-green-900/50" id="terminalLogs">
-                > Initializing secure connection...<br>
+            <div class="text-xs text-green-400 bg-black/90 p-4 rounded-xl border border-green-800 text-left h-32 overflow-hidden shadow-2xl shadow-green-950" id="terminalLogs">
+                > Initializing secure connection nodes...<br>
                 > Loading subscriber database & M3U8 modules...<br>
                 > BDIX server heartbeat: OK<br>
             </div>
@@ -48,7 +103,7 @@
     </div>
 
     <!-- Header / Navigation Bar -->
-    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-40">
+    <header id="mainHeader" class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-[37px] z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <div class="text-2xl font-black tracking-wider text-white flex items-center">
@@ -57,25 +112,29 @@
             </div>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="#" onclick="switchTab('client')" class="text-slate-300 hover:text-rose-400 font-medium transition">Home</a>
-                <a href="#" onclick="showPackagesModal()" class="text-slate-300 hover:text-rose-400 font-medium transition">Packages</a>
-                <a href="#" onclick="showLiveTVModal()" class="text-rose-400 font-bold hover:text-rose-300 transition"><i class="fa-solid fa-tv mr-1"></i> লাইভ টিভি</a>
-                <a href="#" onclick="showMediaModal()" class="text-slate-300 hover:text-rose-400 font-medium transition">Media & FTP</a>
+                <a href="#" onclick="switchTab('client')" class="tv-focusable text-slate-300 hover:text-rose-400 font-medium transition px-3 py-1.5 rounded-lg">Home</a>
+                <a href="#" onclick="showPackagesModal()" class="tv-focusable text-slate-300 hover:text-rose-400 font-medium transition px-3 py-1.5 rounded-lg">Packages</a>
+                <a href="#" onclick="showLiveTVModal()" class="tv-focusable text-rose-400 font-bold hover:text-rose-300 transition px-3 py-1.5 rounded-lg"><i class="fa-solid fa-tv mr-1"></i> লাইভ টিভি</a>
+                <a href="#" onclick="showMediaModal()" class="tv-focusable text-slate-300 hover:text-rose-400 font-medium transition px-3 py-1.5 rounded-lg">Media & FTP</a>
             </nav>
 
             <div class="flex items-center space-x-3">
-                <button onclick="switchTab('client')" id="btnClientTab" class="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-xl font-semibold transition shadow-lg shadow-rose-600/20 text-sm">
+                <button onclick="switchTab('client')" id="btnClientTab" class="tv-focusable bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-xl font-semibold transition shadow-lg shadow-rose-600/20 text-sm">
                     <i class="fa-solid fa-user mr-1.5"></i> Self Care
                 </button>
-                <button onclick="openAdminModal()" id="btnAdminTab" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700">
+                <button onclick="openAdminModal()" id="btnAdminTab" class="tv-focusable bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700">
                     <i class="fa-solid fa-lock mr-1.5"></i> Admin
+                </button>
+                <!-- Switch Mode Button -->
+                <button onclick="resetAppMode()" class="tv-focusable bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700" title="মোড পরিবর্তন করুন">
+                    <i class="fa-solid fa-shuffle"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Premium Hero Section with Network Equipment Background -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <!-- Hero Section -->
+    <div id="heroSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <div class="rounded-2xl overflow-hidden shadow-2xl relative border border-slate-800 bg-cover bg-center" style="background-image: linear-gradient(to right, rgba(2, 6, 23, 0.95), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1200&q=80');">
             <div class="absolute inset-0 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:24px_24px] opacity-10"></div>
             <div class="relative py-16 px-6 sm:px-12 text-center text-white">
@@ -100,9 +159,9 @@
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1 flex items-center bg-slate-950 border border-slate-800 rounded-xl focus-within:ring-2 focus-within:ring-rose-500">
                         <span class="pl-4 pr-1 text-rose-500 font-bold text-base select-none">0</span>
-                        <input type="text" id="clientSearchInput" placeholder="1336637736 (বাকি নম্বর দিন)" class="w-full py-3.5 pr-4 bg-transparent text-white focus:outline-none text-sm font-medium">
+                        <input type="text" id="clientSearchInput" placeholder="158044506 (বাকি নম্বর দিন)" class="tv-focusable w-full py-3.5 pr-4 bg-transparent text-white focus:outline-none text-sm font-medium">
                     </div>
-                    <button onclick="searchClient()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-3.5 rounded-xl transition flex items-center justify-center shadow-lg shadow-rose-600/30">
+                    <button onclick="searchClient()" class="tv-focusable bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-3.5 rounded-xl transition flex items-center justify-center shadow-lg shadow-rose-600/30">
                         <i class="fa-solid fa-search mr-2"></i> খোঁজ করুন
                     </button>
                 </div>
@@ -114,30 +173,23 @@
         <!-- ADMIN PANEL VIEW -->
         <div id="adminView" class="hidden space-y-6">
             <div class="bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 border border-slate-800 space-y-8">
-                
-                <!-- Section 1: Subscribers & CSV Upload -->
                 <div>
                     <div class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-slate-800 gap-4">
                         <div>
                             <h2 class="text-xl font-black text-white">এডমিন ম্যানেজমেন্ট প্যানেল</h2>
                             <p class="text-xs text-slate-400 mt-0.5">গ্রাহকের বিল আপডেট ও হোয়াটসঅ্যাপ রিমাইন্ডার পাঠানোর ব্যবস্থা</p>
                         </div>
-                        
                         <div class="flex items-center gap-3 flex-wrap">
-                            <label class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-3 rounded-xl cursor-pointer transition flex items-center shadow-lg shadow-blue-600/20">
+                            <label class="tv-focusable bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-3 rounded-xl cursor-pointer transition flex items-center shadow-lg shadow-blue-600/20">
                                 <i class="fa-solid fa-file-arrow-up mr-2"></i> CSV ডাটা ফাইল আপলোড
                                 <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileUpload(event)">
                             </label>
                             <div class="w-64 relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">
-                                    <i class="fa-solid fa-search text-xs"></i>
-                                </span>
-                                <input type="text" id="adminSearchInput" onkeyup="filterAdminTable()" placeholder="নম্বর বা নাম দিয়ে খুঁজুন..." class="w-full pl-9 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-slate-700">
+                                <input type="text" id="adminSearchInput" onkeyup="filterAdminTable()" placeholder="নম্বর বা নাম দিয়ে খুঁজুন..." class="tv-focusable w-full pl-4 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-slate-700">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Subscribers Table -->
                     <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950">
                         <table class="w-full text-left border-collapse text-sm" id="adminTable">
                             <thead class="bg-slate-900 text-slate-400 uppercase text-xs tracking-wider border-b border-slate-800">
@@ -154,119 +206,86 @@
                                     <th class="p-3.5">WhatsApp</th>
                                 </tr>
                             </thead>
-                            <tbody id="adminTableBody" class="divide-y divide-slate-900 text-slate-300">
-                                <!-- Populated by JS -->
-                            </tbody>
+                            <tbody id="adminTableBody" class="divide-y divide-slate-900 text-slate-300"></tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Section 2: Live TV & Media Link Manager -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-800">
-                    <!-- Live TV Links Manager -->
                     <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800">
                         <h3 class="font-bold text-sm text-white mb-3 flex items-center"><i class="fa-solid fa-tv text-rose-500 mr-2"></i> লাইভ টিভি (.m3u8) ম্যানেজমেন্ট</h3>
                         <div class="space-y-3 mb-4">
-                            <input type="text" id="newTvTitle" placeholder="চ্যানেলের নাম (যেমন: T Sports HD)" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
-                            <input type="text" id="newTvUrl" placeholder="M3U8 স্ট্রিম লিংক (.m3u8)" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-rose-500">
-                            
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-400 mb-1">অথবা .m3u8 ফাইল আপলোড করুন:</label>
-                                <input type="file" id="m3u8FileInput" accept=".m3u8,.txt" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-rose-500/10 file:text-rose-400 hover:file:bg-rose-500/20 cursor-pointer" onchange="handleM3u8FileUpload(event)">
-                            </div>
-
-                            <button onclick="addLiveTV()" class="w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-3 rounded-xl transition shadow-lg shadow-rose-600/20">চ্যানেল যোগ ও সেভ করুন</button>
+                            <input type="text" id="newTvTitle" placeholder="চ্যানেলের নাম" class="tv-focusable w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none">
+                            <input type="text" id="newTvUrl" placeholder="M3U8 স্ট্রিম লিংক" class="tv-focusable w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none">
+                            <button onclick="addLiveTV()" class="tv-focusable w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-3 rounded-xl transition">চ্যানেল যোগ করুন</button>
                         </div>
                         <div id="adminTvList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
                     </div>
 
-                    <!-- Media Links Manager -->
                     <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800">
                         <h3 class="font-bold text-sm text-white mb-3 flex items-center"><i class="fa-solid fa-film text-blue-500 mr-2"></i> মিডিয়া সাইট লিংক ম্যানেজমেন্ট</h3>
                         <div class="space-y-3 mb-4">
-                            <input type="text" id="newMediaTitle" placeholder="সাইটের নাম (যেমন: BDIX Movie FTP)" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <input type="text" id="newMediaUrl" placeholder="ওয়েবসাইট বা FTP লিংক (https://...)" class="w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <button onclick="addMediaSite()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-3 rounded-xl transition shadow-lg shadow-blue-600/20">মিডিয়া সাইট যোগ ও সেভ করুন</button>
+                            <input type="text" id="newMediaTitle" placeholder="সাইটের নাম" class="tv-focusable w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none">
+                            <input type="text" id="newMediaUrl" placeholder="লিংক (https://...)" class="tv-focusable w-full p-3 bg-slate-900 border border-slate-800 rounded-xl text-sm text-white focus:outline-none">
+                            <button onclick="addMediaSite()" class="tv-focusable w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-3 rounded-xl transition">মিডিয়া সাইট যোগ করুন</button>
                         </div>
                         <div id="adminMediaList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
-
             </div>
         </div>
 
     </main>
 
-    <!-- Live TV Player Modal -->
-    <div id="liveTvModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative border border-slate-800 text-white">
-            <button onclick="closeLiveTVModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="text-lg font-bold mb-4 flex items-center">
-                <span class="text-rose-500 mr-2"><i class="fa-solid fa-tv"></i></span> লাইভ টিভি বিনোদন (ExoPlayer Stream)
-            </h3>
+    <!-- Live TV Player Modal with Fullscreen & Remote Channel Changing -->
+    <div id="liveTvModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-slate-900 rounded-2xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative border border-slate-800 text-white flex flex-col max-h-[95vh]">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-base sm:text-lg font-bold flex items-center truncate">
+                    <span class="text-rose-500 mr-2"><i class="fa-solid fa-tv"></i></span> <span id="currentPlayingTitle" class="truncate">লাইভ টিভি প্লেয়ার</span>
+                </h3>
+                <div class="flex items-center space-x-2">
+                    <span class="text-[11px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 hidden sm:inline"><i class="fa-solid fa-arrows-up-down text-rose-400 mr-1"></i> রিমোটের Up/Down চেপে চ্যানেল বদলান</span>
+                    <button onclick="toggleVideoFullscreen()" class="tv-focusable bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md">
+                        <i class="fa-solid fa-expand mr-1.5"></i> ফুল স্ক্রিন
+                    </button>
+                    <button onclick="closeLiveTVModal()" class="tv-focusable text-slate-400 hover:text-white text-xl p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
             
-            <div id="videoContainer" class="mb-4 bg-black rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-800 shadow-inner">
-                <video id="exoPlayer" controls autoplay class="w-full h-full object-contain">
+            <div id="videoContainer" class="mb-4 bg-black rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-800 shadow-inner relative">
+                <video id="exoPlayer" controls autoplay playsinline class="w-full h-full object-contain">
                     আপনার ব্রাউজার ভিডিও প্লেয়ার সমর্থন করে না।
                 </video>
             </div>
-            
-            <div class="flex items-center justify-between mb-3">
-                <span id="currentPlayingTitle" class="text-xs font-semibold text-slate-400">একটি চ্যানেল নির্বাচন করুন</span>
-            </div>
 
-            <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-40 overflow-y-auto pr-1"></div>
+            <div class="text-xs text-slate-400 mb-2 font-semibold">চ্যানেল লিস্ট (রিমোট দিয়ে সিলেক্ট করুন):</div>
+            <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 overflow-y-auto pr-1 max-h-40"></div>
         </div>
     </div>
 
     <!-- Media Links Modal -->
     <div id="mediaModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative border border-slate-800 text-white">
-            <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="text-lg font-bold text-white mb-2 flex items-center">
-                <span class="text-blue-500 mr-2"><i class="fa-solid fa-film"></i></span> মুভি ও মিডিয়া সাইটসমূহ
-            </h3>
-            <p class="text-xs text-slate-400 mb-4">আমাদের লোকাল BDIX এবং বিনোদন সার্ভারসমূহ থেকে মুভি উপভোগ করুন।</p>
-            
-            <div id="clientMediaList" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1"></div>
-            
-            <div class="mt-6 text-right">
-                <button onclick="closeMediaModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs px-4 py-2 rounded-xl font-medium">বন্ধ করুন</button>
-            </div>
+            <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-white mb-2 flex items-center"><span class="text-blue-500 mr-2"><i class="fa-solid fa-film"></i></span> মুভি ও মিডিয়া সাইটসমূহ</h3>
+            <div id="clientMediaList" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 mt-4"></div>
+            <div class="mt-6 text-right"><button onclick="closeMediaModal()" class="tv-focusable bg-slate-800 hover:bg-slate-700 text-white text-xs px-4 py-2 rounded-xl font-medium">বন্ধ করুন</button></div>
         </div>
     </div>
 
-    <!-- Modern Admin Login Modal -->
+    <!-- Admin Login Modal -->
     <div id="adminLoginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-800 text-white">
-            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl border border-rose-500/20 shadow-inner">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
                 <h3 class="text-xl font-bold text-white">এডমিন ভেরিফিকেশন</h3>
-                <p class="text-xs text-slate-400 mt-1">প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন</p>
             </div>
-            
             <div class="space-y-4">
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
-                        <i class="fa-solid fa-key text-sm"></i>
-                    </span>
-                    <input type="password" id="adminPasswordInput" placeholder="পাসওয়ার্ড লিখুন" class="w-full pl-10 pr-10 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm text-white">
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-slate-300">
-                        <i id="eyeIcon" class="fa-solid fa-eye text-sm"></i>
-                    </button>
-                </div>
-                <button onclick="verifyAdminPassword()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-rose-600/30 text-sm">
-                    প্রবেশ করুন
-                </button>
+                <input type="password" id="adminPasswordInput" placeholder="পাসওয়ার্ড লিখুন" class="tv-focusable w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:outline-none text-sm text-white">
+                <button onclick="verifyAdminPassword()" class="tv-focusable w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-xl transition text-sm">প্রবেশ করুন</button>
             </div>
         </div>
     </div>
@@ -274,115 +293,98 @@
     <!-- Packages Modal -->
     <div id="packagesModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative border border-slate-800 text-white">
-            <button onclick="closePackagesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 class="text-xl font-bold text-white mb-2 flex items-center">
-                <span class="text-rose-500 mr-2"><i class="fa-solid fa-box-open"></i></span> All Internet Packages
-            </h3>
-            <p class="text-xs text-slate-400 mb-4">Find the perfect broadband plan for your home or business. High-speed, reliable, and affordable.</p>
-            
+            <button onclick="closePackagesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4"><span class="text-rose-500 mr-2"><i class="fa-solid fa-box-open"></i></span> Internet Packages</h3>
             <div class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">DURONTO_20Mbps</h4><p class="text-xs text-slate-400">20 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳500</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">AGAMI_30Mbps</h4><p class="text-xs text-slate-400">30 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳800</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">BIJOY_40Mbps</h4><p class="text-xs text-slate-400">40 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳1,000</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">BLAZE_50Mbps</h4><p class="text-xs text-slate-400">50 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳1,200</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">TURBO_60Mbps</h4><p class="text-xs text-slate-400">60 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳1,500</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">INFINITY_100Mbps</h4><p class="text-xs text-slate-400">100 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳2,000</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
-                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center">
-                    <div><h4 class="font-bold text-rose-400 text-base">GAMER_BLAZE_150Mbps</h4><p class="text-xs text-slate-400">150 Mbps · Valid 30 days</p></div>
-                    <div class="text-right"><span class="text-lg font-black text-white">৳2,500</span><span class="text-[10px] text-slate-500 block">/month</span></div>
-                </div>
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center"><div><h4 class="font-bold text-rose-400">DURONTO_20Mbps</h4><p class="text-xs text-slate-400">20 Mbps · 30 days</p></div><span class="font-black text-white">৳500</span></div>
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center"><div><h4 class="font-bold text-rose-400">AGAMI_30Mbps</h4><p class="text-xs text-slate-400">30 Mbps · 30 days</p></div><span class="font-black text-white">৳800</span></div>
+                <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center"><div><h4 class="font-bold text-rose-400">TURBO_60Mbps</h4><p class="text-xs text-slate-400">60 Mbps · 30 days</p></div><span class="font-black text-white">৳1,500</span></div>
             </div>
-            <div class="mt-6 text-right">
-                <button onclick="closePackagesModal()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs px-4 py-2 rounded-xl font-medium">বন্ধ করুন</button>
-            </div>
+            <div class="mt-6 text-right"><button onclick="closePackagesModal()" class="tv-focusable bg-slate-800 text-white text-xs px-4 py-2 rounded-xl">বন্ধ করুন</button></div>
         </div>
     </div>
 
-    <!-- Floating WhatsApp Hotline Button -->
-    <a href="https://wa.me/880158044506" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl shadow-emerald-500/50 transition transform hover:scale-110 z-40 text-2xl" title="হটলাইন WhatsApp: 0158044506">
+    <!-- WhatsApp Floating Button -->
+    <a id="whatsappBtn" href="https://wa.me/880158044506" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition transform hover:scale-110 z-30 text-2xl" title="Hotline WhatsApp">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
     <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-900 mt-12 py-6 text-center text-slate-500 text-xs">
-        <p>&copy; 2026 Peoples Communication. All rights reserved. Hotline: <span class="font-bold text-slate-300">01580-44506</span></p>
+    <footer id="mainFooter" class="bg-slate-950 border-t border-slate-900 mt-12 py-6 text-center text-slate-500 text-xs">
+        <p>&copy; 2026 Peoples Communication. Hotline: <span class="font-bold text-slate-300">01580-44506</span></p>
     </footer>
 
-    <!-- JavaScript Logic & Hacker Loader Script -->
+    <!-- JavaScript Logic & TV Remote Support -->
     <script>
-        // Hacker Terminal Animation on Load
+        let currentChannelIndex = 0;
+
+        // Mode Management
         window.addEventListener('DOMContentLoaded', () => {
-            const logs = [
-                "> Decrypting client database nodes...",
-                "> Connecting to M3U8 streaming clusters...",
-                "> Verifying LocalStorage persistent storage...",
-                "> System initialized successfully. Welcome!"
-            ];
+            const savedMode = localStorage.getItem('peoples_app_mode');
+            if(!savedMode) {
+                document.getElementById('modeSelectModal').classList.remove('hidden');
+            } else {
+                document.getElementById('modeSelectModal').classList.add('hidden');
+                applyAppMode(savedMode);
+            }
+
+            // Hacker Loader animation
+            const logs = ["> Decrypting client database nodes...", "> Loading M3U8 streaming clusters...", "> System initialized!"];
             let bar = document.getElementById('loaderBar');
             let term = document.getElementById('terminalLogs');
             let loader = document.getElementById('hackerLoader');
             let width = 0;
-
             let interval = setInterval(() => {
-                width += 25;
+                width += 34;
                 bar.style.width = width + '%';
-                if(width === 50) term.innerHTML += logs[0] + "<br>";
-                if(width === 75) term.innerHTML += logs[1] + "<br>";
-                if(width === 100) {
-                    term.innerHTML += logs[3] + "<br>";
+                if(width >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => {
-                        loader.style.opacity = '0';
-                        setTimeout(() => loader.remove(), 700);
-                    }, 500);
+                    setTimeout(() => { loader.style.opacity = '0'; setTimeout(() => loader.remove(), 500); }, 300);
                 }
-            }, 300);
+            }, 200);
         });
+
+        function setAppMode(mode) {
+            localStorage.setItem('peoples_app_mode', mode);
+            document.getElementById('modeSelectModal').classList.add('hidden');
+            applyAppMode(mode);
+            if(mode === 'tv') {
+                showLiveTVModal(); // TV মোডে সরাসরি লাইভ টিভি ওপেন হবে
+            }
+        }
+
+        function resetAppMode() {
+            localStorage.removeItem('peoples_app_mode');
+            document.getElementById('modeSelectModal').classList.remove('hidden');
+        }
+
+        function applyAppMode(mode) {
+            if(mode === 'tv') {
+                // TV মোডে শুধুমাত্র লাইভ টিভি ও রিমোট ফিচার থাকবে, বাকিগুলো হাইড হবে
+                document.getElementById('mainHeader').style.display = 'none';
+                document.getElementById('heroSection').style.display = 'none';
+                document.querySelector('main').style.display = 'none';
+                document.getElementById('whatsappBtn').style.display = 'none';
+                document.getElementById('mainFooter').style.display = 'none';
+            } else {
+                // Mobile মোডে সব ফিচার শো করবে
+                document.getElementById('mainHeader').style.display = 'block';
+                document.getElementById('heroSection').style.display = 'block';
+                document.querySelector('main').style.display = 'block';
+                document.getElementById('whatsappBtn').style.display = 'flex';
+                document.getElementById('mainFooter').style.display = 'block';
+            }
+        }
 
         let defaultSubscribers = [
             {code: "PEOPLES-GX0MDI", name: "Sitol Munda", mobile: "1336637736", pppoe: "sm20-sitol", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/18/2026", due: 500},
-            {code: "psm0019", name: "sm20-ajoy", mobile: "1740093293", pppoe: "sm20-ajoy", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/10/2026", due: 500},
-            {code: "psm0013", name: "sm20-ashik", mobile: "1618953909", pppoe: "sm20-ashik", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "suspended", expires: "10/25/2026", due: 500},
-            {code: "psm0017", name: "sm20-bikash", mobile: "1763131308", pppoe: "sm20-bikash", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "suspended", expires: "11/1/2026", due: 500},
-            {code: "psm0009", name: "sm20-binoy", mobile: "1314951822", pppoe: "sm20-binoy", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "suspended", expires: "10/4/2026", due: 500},
-            {code: "psm0010", name: "sm20-biplob", mobile: "1854036069", pppoe: "sm20-biplob", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "suspended", expires: "10/27/2026", due: 500},
-            {code: "psm0002", name: "sm20-obhi", mobile: "1985158310", pppoe: "sm20-obhi", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/10/2026", due: 500},
-            {code: "psm0003", name: "sm20-pritom", mobile: "1312927045", pppoe: "sm20-pritom", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/8/2026", due: 500},
-            {code: "psm0023", name: "sm20-ramdas", mobile: "1301583325", pppoe: "sm20-ramdas", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/13/2026", due: 500},
-            {code: "psm0005", name: "sm20-shopon", mobile: "1782170475", pppoe: "sm20-shopon", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/14/2026", due: 500},
-            {code: "psm0001", name: "sm20-siba", mobile: "1986451139", pppoe: "sm20-siba", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/15/2026", due: 500},
-            {code: "psm0007", name: "sm20-sihab", mobile: "1984573025", pppoe: "sm20-sihab", zone: "SURMA_20no_POP", package: "TURBO_60Mbps", status: "active", expires: "11/22/2026", due: 0},
-            {code: "psm0014", name: "sm20-sneha", mobile: "1939615947", pppoe: "sm20-sneha", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "suspended", expires: "10/11/2026", due: 500},
-            {code: "psm0022", name: "sm20-sumonkr", mobile: "1953736393", pppoe: "sm20-sumonkr", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/19/2026", due: 500},
-            {code: "psm0011", name: "sm20-ujjol", mobile: "1701318235", pppoe: "sm20-ujjol", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/14/2026", due: 500},
-            {code: "psm0024", name: "sm20-uttam", mobile: "1701318235", pppoe: "sm20-uttam", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/10/2026", due: 500},
-            {code: "PEOPLES-T2D18H", name: "Suresh Mirdha", mobile: "1345620424", pppoe: "sm20-suresh", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/18/2026", due: 1000},
-            {code: "PEOPLES-CTXF4X", name: "Suvongkor Tontuby", mobile: "1700000000", pppoe: "sm20-suvo", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/30/2026", due: 500}
+            {code: "psm0007", name: "sm20-sihab", mobile: "158044506", pppoe: "sm20-sihab", zone: "SURMA_20no_POP", package: "TURBO_60Mbps", status: "active", expires: "11/22/2026", due: 0}
         ];
 
         let defaultTvChannels = [
             { title: "T Sports HD", url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" },
-            { title: "GTV Live", url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" }
+            { title: "Zee Bangla Live", url: "https://stream.ottplus.live/live/zee_bangla_abr/live/zee_bangla_720/chunks.m3u8" },
+            { title: "GTV Live HD", url: "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4" }
         ];
 
         let defaultMediaSites = [
@@ -400,361 +402,144 @@
             localStorage.setItem('peoples_media', JSON.stringify(mediaSites));
         }
 
-        function openAdminModal() {
-            document.getElementById('adminLoginModal').classList.remove('hidden');
-            document.getElementById('adminPasswordInput').value = '';
-        }
-        function closeAdminModal() {
-            document.getElementById('adminLoginModal').classList.add('hidden');
-        }
-
-        function togglePasswordVisibility() {
-            const passInput = document.getElementById('adminPasswordInput');
-            const eyeIcon = document.getElementById('eyeIcon');
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.className = 'fa-solid fa-eye-slash text-sm';
-            } else {
-                passInput.type = 'password';
-                eyeIcon.className = 'fa-solid fa-eye text-sm';
-            }
-        }
-
-        function verifyAdminPassword() {
-            let pass = document.getElementById('adminPasswordInput').value;
-            if(pass === "01410441506") {
-                closeAdminModal();
-                switchTab('admin');
-            } else {
-                alert("ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিন।");
-            }
-        }
-
-        function showPackagesModal() {
-            document.getElementById('packagesModal').classList.remove('hidden');
-        }
-        function closePackagesModal() {
-            document.getElementById('packagesModal').classList.add('hidden');
-        }
-
         function showLiveTVModal() {
             document.getElementById('liveTvModal').classList.remove('hidden');
             renderClientTvList();
             if(liveTvChannels.length > 0) {
-                playChannel(liveTvChannels[0].url, liveTvChannels[0].title);
+                playChannel(0);
             }
         }
+
         function closeLiveTVModal() {
             document.getElementById('liveTvModal').classList.add('hidden');
             let player = document.getElementById('exoPlayer');
             player.pause();
             player.src = "";
+            const savedMode = localStorage.getItem('peoples_app_mode');
+            if(savedMode === 'tv') {
+                // TV মোডে ব্যাক করলে বা ক্লোজ করলে অ্যাপ যাতে বন্ধ বা রি-লঞ্চ না হয়ে আবার টিভি মোড ঠিক থাকে
+                showLiveTVModal();
+            }
         }
-        function playChannel(url, title) {
+
+        function playChannel(index) {
+            currentChannelIndex = index;
+            let ch = liveTvChannels[index];
             let player = document.getElementById('exoPlayer');
-            document.getElementById('currentPlayingTitle').innerText = "চলছে: " + title;
-            player.src = url;
+            document.getElementById('currentPlayingTitle').innerText = `[চ্যানেল ${index + 1}/${liveTvChannels.length}] ${ch.title}`;
+            player.src = ch.url;
             player.play().catch(e => console.log("Stream loading"));
         }
+
+        function toggleVideoFullscreen() {
+            let player = document.getElementById('exoPlayer');
+            if (player.requestFullscreen) player.requestFullscreen();
+            else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
+        }
+
         function renderClientTvList() {
             let container = document.getElementById('clientTvList');
             container.innerHTML = '';
-            liveTvChannels.forEach(ch => {
+            liveTvChannels.forEach((ch, idx) => {
                 container.innerHTML += `
-                    <button onclick="playChannel('${ch.url}', '${ch.title}')" class="bg-slate-800 hover:bg-rose-600 text-white text-xs p-2.5 rounded-xl font-medium transition text-left truncate flex items-center border border-slate-700">
-                        <i class="fa-solid fa-circle-play text-rose-400 mr-2"></i> ${ch.title}
+                    <button onclick="playChannel(${idx})" class="tv-focusable bg-slate-800 hover:bg-rose-600 text-white text-xs p-3 rounded-xl font-medium transition text-left truncate flex items-center border border-slate-700">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-[10px] font-bold mr-2 shrink-0">${idx+1}</span>
+                        <span class="truncate">${ch.title}</span>
                     </button>
                 `;
             });
         }
 
-        function showMediaModal() {
-            document.getElementById('mediaModal').classList.remove('hidden');
-            renderClientMediaList();
+        // TV Remote One-Click Channel Changing (Up/Down Arrow keys or CH+/CH- remote buttons)
+        function handleTVRemote(e) {
+            if(document.getElementById('liveTvModal').classList.contains('hidden')) return;
+
+            if (e.key === 'ArrowUp' || e.keyCode === 38 || e.key === 'ChannelUp') {
+                currentChannelIndex = (currentChannelIndex - 1 + liveTvChannels.length) % liveTvChannels.length;
+                playChannel(currentChannelIndex);
+                e.preventDefault();
+            } else if (e.key === 'ArrowDown' || e.keyCode === 40 || e.key === 'ChannelDown') {
+                currentChannelIndex = (currentChannelIndex + 1) % liveTvChannels.length;
+                playChannel(currentChannelIndex);
+                e.preventDefault();
+            }
         }
-        function closeMediaModal() {
-            document.getElementById('mediaModal').classList.add('hidden');
+
+        function openAdminModal() { document.getElementById('adminLoginModal').classList.remove('hidden'); }
+        function closeAdminModal() { document.getElementById('adminLoginModal').classList.add('hidden'); }
+        function verifyAdminPassword() {
+            if(document.getElementById('adminPasswordInput').value === "01410441506") {
+                closeAdminModal();
+                switchTab('admin');
+            } else { alert("ভুল পাসওয়ার্ড!"); }
         }
+
+        function showPackagesModal() { document.getElementById('packagesModal').classList.remove('hidden'); }
+        function closePackagesModal() { document.getElementById('packagesModal').classList.add('hidden'); }
+        function showMediaModal() { document.getElementById('mediaModal').classList.remove('hidden'); renderClientMediaList(); }
+        function closeMediaModal() { document.getElementById('mediaModal').classList.add('hidden'); }
         function renderClientMediaList() {
             let container = document.getElementById('clientMediaList');
             container.innerHTML = '';
             mediaSites.forEach(m => {
-                container.innerHTML += `
-                    <a href="${m.url}" target="_blank" class="block p-3.5 bg-slate-950 hover:bg-blue-950/40 border border-slate-800 rounded-xl text-sm font-medium text-slate-200 hover:text-blue-400 transition flex items-center justify-between">
-                        <span><i class="fa-solid fa-film text-blue-500 mr-2"></i> ${m.title}</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500"></i>
-                    </a>
-                `;
-            });
-        }
-
-        function addLiveTV() {
-            let title = document.getElementById('newTvTitle').value.trim();
-            let url = document.getElementById('newTvUrl').value.trim();
-            if(!title || !url) {
-                alert("চ্যানেলের নাম এবং স্ট্রিম লিংক দিন।");
-                return;
-            }
-            liveTvChannels.push({ title, url });
-            saveToStorage();
-            document.getElementById('newTvTitle').value = '';
-            document.getElementById('newTvUrl').value = '';
-            renderAdminTvList();
-            alert("লাইভ টিভি সফলভাবে যোগ ও সেভ করা হয়েছে!");
-        }
-
-        function handleM3u8FileUpload(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const content = e.target.result;
-                const lines = content.split('\n');
-                let addedCount = 0;
-                let currentTitle = "Live Channel";
-
-                lines.forEach(line => {
-                    line = line.trim();
-                    if(line.startsWith('#EXTINF:')) {
-                        let parts = line.split(',');
-                        if(parts.length > 1) {
-                            currentTitle = parts[1].trim();
-                        }
-                    } else if(line && !line.startsWith('#')) {
-                        liveTvChannels.push({ title: currentTitle, url: line });
-                        addedCount++;
-                    }
-                });
-
-                saveToStorage();
-                renderAdminTvList();
-                alert(`ফাইল থেকে সফলভাবে ${addedCount}টি চ্যানেল যোগ ও পার্মানেন্টলি সেভ করা হয়েছে!`);
-            };
-            reader.readAsText(file);
-        }
-
-        function removeLiveTV(index) {
-            liveTvChannels.splice(index, 1);
-            saveToStorage();
-            renderAdminTvList();
-        }
-        function renderAdminTvList() {
-            let container = document.getElementById('adminTvList');
-            container.innerHTML = '';
-            liveTvChannels.forEach((ch, idx) => {
-                container.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-xl border border-slate-800 text-xs">
-                        <span class="truncate font-medium text-slate-200">${ch.title}</span>
-                        <button onclick="removeLiveTV(${idx})" class="text-rose-500 hover:text-rose-400 ml-2 font-bold px-2 py-1"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-            });
-        }
-
-        function addMediaSite() {
-            let title = document.getElementById('newMediaTitle').value.trim();
-            let url = document.getElementById('newMediaUrl').value.trim();
-            if(!title || !url) {
-                alert("সাইটের নাম এবং লিংক উভয়ই দিন।");
-                return;
-            }
-            mediaSites.push({ title, url });
-            saveToStorage();
-            document.getElementById('newMediaTitle').value = '';
-            document.getElementById('newMediaUrl').value = '';
-            renderAdminMediaList();
-            alert("মিডিয়া সাইট সফলভাবে যোগ ও সেভ করা হয়েছে!");
-        }
-        function removeMediaSite(index) {
-            mediaSites.splice(index, 1);
-            saveToStorage();
-            renderAdminMediaList();
-        }
-        function renderAdminMediaList() {
-            let container = document.getElementById('adminMediaList');
-            container.innerHTML = '';
-            mediaSites.forEach((m, idx) => {
-                container.innerHTML += `
-                    <div class="flex justify-between items-center bg-slate-900 p-2.5 rounded-xl border border-slate-800 text-xs">
-                        <span class="truncate font-medium text-slate-200">${m.title}</span>
-                        <button onclick="removeMediaSite(${idx})" class="text-rose-500 hover:text-rose-400 ml-2 font-bold px-2 py-1"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
+                container.innerHTML += `<a href="${m.url}" target="_blank" class="tv-focusable block p-3.5 bg-slate-950 hover:bg-blue-950/40 border border-slate-800 rounded-xl text-sm font-medium text-slate-200 transition"><i class="fa-solid fa-film text-blue-500 mr-2"></i> ${m.title}</a>`;
             });
         }
 
         function switchTab(tab) {
-            const clientView = document.getElementById('clientView');
-            const adminView = document.getElementById('adminView');
-            const btnClientTab = document.getElementById('btnClientTab');
-            const btnAdminTab = document.getElementById('btnAdminTab');
-
             if(tab === 'client') {
-                clientView.classList.remove('hidden');
-                adminView.classList.add('hidden');
-                btnClientTab.className = "bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-xl font-semibold transition shadow-lg shadow-rose-600/20 text-sm";
-                btnAdminTab.className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700";
+                document.getElementById('clientView').classList.remove('hidden');
+                document.getElementById('adminView').classList.add('hidden');
             } else {
-                clientView.classList.add('hidden');
-                adminView.classList.remove('hidden');
-                btnAdminTab.className = "bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-xl font-semibold transition shadow-lg shadow-rose-600/20 text-sm";
-                btnClientTab.className = "bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700";
-                loadAdminTable();
+                document.getElementById('clientView').classList.add('hidden');
+                document.getElementById('adminView').classList.remove('hidden');
                 renderAdminTvList();
                 renderAdminMediaList();
             }
         }
 
         function searchClient() {
-            const userInput = document.getElementById('clientSearchInput').value.trim();
+            const query = '0' + document.getElementById('clientSearchInput').value.trim();
+            const found = subscribers.find(s => s.mobile === query);
             const resultDiv = document.getElementById('clientResult');
-
-            if(!userInput) {
-                resultDiv.innerHTML = `<p class="text-rose-500 text-center text-sm font-medium">দয়া করে মোবাইল নম্বরের বাকি অংশ লিখুন।</p>`;
-                resultDiv.classList.remove('hidden');
-                return;
-            }
-
-            const query = '0' + userInput;
-            const found = subscribers.find(s => s.mobile === query || s.mobile.includes(userInput));
-
             if(found) {
-                const statusBadge = found.status === 'active' 
-                    ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-semibold">Active</span>`
-                    : `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs px-2.5 py-1 rounded-full font-semibold">Suspended</span>`;
-
-                const billBadge = found.due === 0
-                    ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-xl font-bold"><i class="fa-solid fa-circle-check mr-1"></i> বিল পরিশোধ করা হয়েছে (Paid)</span>`
-                    : `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs px-2.5 py-1 rounded-xl font-bold"><i class="fa-solid fa-circle-exclamation mr-1"></i> বকেয়া আছে (Due: ৳${found.due})</span>`;
-
-                const bkashLink = `https://shop.bkash.com/payment?merchantNumber=0158044506&amount=${found.due}&ref=${found.code}`;
-
-                resultDiv.innerHTML = `
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-inner">
-                        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                            <h3 class="font-bold text-lg text-white">${found.name}</h3>
-                            ${statusBadge}
-                        </div>
-                        <div class="mb-2">${billBadge}</div>
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div><span class="text-slate-500 block text-xs">PPPoE ID / Code</span><span class="font-semibold text-slate-200">${found.code}</span></div>
-                            <div><span class="text-slate-500 block text-xs">Mobile</span><span class="font-semibold text-slate-200">${found.mobile}</span></div>
-                            <div><span class="text-slate-500 block text-xs">Package</span><span class="font-semibold text-rose-400">${found.package}</span></div>
-                            <div><span class="text-slate-500 block text-xs">Zone</span><span class="font-semibold text-slate-200">${found.zone}</span></div>
-                            <div><span class="text-slate-500 block text-xs">মেয়াদ শেষের তারিখ (Expires)</span><span class="font-semibold text-amber-400">${found.expires}</span></div>
-                            <div><span class="text-slate-500 block text-xs">বকেয়া বিল (Due)</span><span class="font-bold text-rose-500">BDT ${found.due}</span></div>
-                        </div>
-                        <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row gap-2 justify-center">
-                            ${found.due > 0 ? `
-                            <a href="${bkashLink}" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-4 py-3 rounded-xl transition text-center shadow-lg shadow-pink-600/30">
-                                <i class="fa-solid fa-wallet mr-1"></i> বিকাশ পেমেন্ট করুন (৳${found.due})
-                            </a>` : ''}
-                            <a href="https://wa.me/880158044506?text=Hello,%20I%20want%20to%20confirm%20my%20bill%20payment%20for%20PPPoE:%20${found.code}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-3 rounded-xl transition text-center shadow-lg shadow-emerald-600/30">
-                                <i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp এ কনফার্ম করুন
-                            </a>
-                        </div>
-                    </div>
-                `;
+                resultDiv.innerHTML = `<div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-sm space-y-2"><p class="text-white font-bold">${found.name}</p><p class="text-rose-400">Package: ${found.package}</p><p class="text-amber-400">Expires: ${found.expires}</p><p class="text-rose-500 font-bold">Due: ৳${found.due}</p></div>`;
             } else {
-                resultDiv.innerHTML = `<div class="bg-rose-950/40 border border-rose-800 text-rose-300 p-4 rounded-xl text-center text-sm">দুঃখিত, এই নম্বর দিয়ে কোনো গ্রাহক পাওয়া যায়নি।</div>`;
+                resultDiv.innerHTML = `<p class="text-rose-400 text-center text-sm">গ্রাহক পাওয়া যায়নি।</p>`;
             }
             resultDiv.classList.remove('hidden');
         }
 
-        function loadAdminTable(data = subscribers) {
-            const tbody = document.getElementById('adminTableBody');
-            tbody.innerHTML = '';
-
-            data.forEach((sub, index) => {
-                const badge = sub.status === 'active'
-                    ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2 py-0.5 rounded font-semibold">active</span>`
-                    : `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-xs px-2 py-0.5 rounded font-semibold">suspended</span>`;
-
-                const billControl = sub.due === 0
-                    ? `<span class="text-emerald-400 font-bold text-xs"><i class="fa-solid fa-check-circle"></i> Paid</span> <button onclick="markAsUnpaid(${index})" class="ml-2 text-[10px] text-slate-500 underline">Undo</button>`
-                    : `<button onclick="markAsPaid(${index})" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded-xl font-bold transition shadow-md"><i class="fa-solid fa-check mr-1"></i> Paid করুন</button>`;
-
-                let cleanMobile = sub.mobile.startsWith('0') ? '88' + sub.mobile : '880' + sub.mobile;
-                
-                let msgText = "";
-                if (sub.due === 0) {
-                    msgText = encodeURIComponent(`প্রিয় গ্রাহক (${sub.name}), আপনার Peoples Communication ইন্টারনেট বিল সফলভাবে পরিশোধ (Paid) হয়েছে। আপনার বর্তমান প্যাকেজের মেয়াদ শেষ হবে: ${sub.expires}। পরবর্তী মাসের বিল পরিশোধের তারিখ: ${sub.expires}। ধন্যবাদ। হটলাইন: 0158044506`);
-                } else {
-                    msgText = encodeURIComponent(`প্রিয় গ্রাহক (${sub.name}), আপনার Peoples Communication ইন্টারনেট বিল বকেয়া আছে: ৳${sub.due}। আপনার প্যাকেজের মেয়াদ শেষের তারিখ: ${sub.expires}। দয়া করে বিল পরিশোধ করুন। পরবর্তী মাসের বিল পরিশোধের তারিখ: ${sub.expires}। হটলাইন: 0158044506`);
-                }
-
-                let whatsappLink = `https://wa.me/${cleanMobile}?text=${msgText}`;
-                const whatsappBtn = `<a href="${whatsappLink}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3.5 py-2 rounded-xl inline-flex items-center font-bold transition shadow-md"><i class="fa-brands fa-whatsapp mr-1"></i> মেসেজ দিন</a>`;
-
-                const row = `
-                    <tr class="hover:bg-slate-900 transition">
-                        <td class="p-3.5 font-bold text-white">${sub.code}</td>
-                        <td class="p-3.5 text-slate-200">${sub.name}</td>
-                        <td class="p-3.5 text-slate-400">${sub.mobile}</td>
-                        <td class="p-3.5 text-slate-400">${sub.pppoe}</td>
-                        <td class="p-3.5 text-slate-400">${sub.package}</td>
-                        <td class="p-3.5">${badge}</td>
-                        <td class="p-3.5 text-amber-400 font-semibold">${sub.expires}</td>
-                        <td class="p-3.5 font-bold text-rose-500">৳${sub.due}</td>
-                        <td class="p-3.5">${billControl}</td>
-                        <td class="p-3.5">${whatsappBtn}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
+        function addLiveTV() {
+            let title = document.getElementById('newTvTitle').value.trim();
+            let url = document.getElementById('newTvUrl').value.trim();
+            if(!title || !url) return;
+            liveTvChannels.push({ title, url });
+            saveToStorage();
+            renderAdminTvList();
+            alert("চ্যানেল যোগ করা হয়েছে!");
+        }
+        function renderAdminTvList() {
+            let container = document.getElementById('adminTvList');
+            container.innerHTML = '';
+            liveTvChannels.forEach((ch, idx) => {
+                container.innerHTML += `<div class="flex justify-between items-center bg-slate-900 p-2 rounded-xl text-xs text-white"><span>${ch.title}</span><button onclick="liveTvChannels.splice(${idx},1);saveToStorage();renderAdminTvList();" class="text-rose-500">ডিলিট</button></div>`;
             });
         }
-
-        function markAsPaid(index) {
-            subscribers[index].due = 0;
-            subscribers[index].status = 'active';
+        function addMediaSite() {
+            let title = document.getElementById('newMediaTitle').value.trim();
+            let url = document.getElementById('newMediaUrl').value.trim();
+            if(!title || !url) return;
+            mediaSites.push({ title, url });
             saveToStorage();
-            loadAdminTable();
-            alert("বিল সফলভাবে পরিশোধ (Paid) হিসেবে সেভ করা হয়েছে!");
+            renderAdminMediaList();
+            alert("মিডিয়া সাইট যোগ হয়েছে!");
         }
-
-        function markAsUnpaid(index) {
-            subscribers[index].due = 500;
-            saveToStorage();
-            loadAdminTable();
-        }
-
-        function filterAdminTable() {
-            const val = document.getElementById('adminSearchInput').value.toLowerCase();
-            const filtered = subscribers.filter(s => s.mobile.toLowerCase().includes(val) || s.name.toLowerCase().includes(val) || s.code.toLowerCase().includes(val));
-            loadAdminTable(filtered);
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-
-            Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    if(results.data && results.data.length > 0) {
-                        subscribers = results.data.map(row => ({
-                            code: row.Code || row.code || '',
-                            name: row.Name || row.name || '',
-                            mobile: row.Mobile || row.mobile || '',
-                            pppoe: row.PPPoE || row.pppoe || '',
-                            zone: row.Zone || row.zone || '',
-                            package: row.Package || row.package || '',
-                            status: row.Status || row.status || 'active',
-                            expires: row.Expires || row.expires || '',
-                            due: parseFloat(row.Due || row.due || 0)
-                        }));
-                        saveToStorage();
-                        loadAdminTable();
-                        alert("সফলভাবে নতুন CSV ফাইলের ডাটা আপলোড এবং পার্মানেন্টলি সেভ করা হয়েছে!");
-                    } else {
-                        alert("ফাইল থেকে সঠিক ডাটা পাওয়া যায়নি।");
-                    }
-                },
-                error: function(err) {
-                    alert("ফাইল পড়তে সমস্যা হয়েছে: " + err.message);
-                }
+        function renderAdminMediaList() {
+            let container = document.getElementById('adminMediaList');
+            container.innerHTML = '';
+            mediaSites.forEach((m, idx) => {
+                container.innerHTML += `<div class="flex justify-between items-center bg-slate-900 p-2 rounded-xl text-xs text-white"><span>${m.title}</span><button onclick="mediaSites.splice(${idx},1);saveToStorage();renderAdminMediaList();" class="text-rose-500">ডিলিট</button></div>`;
             });
         }
     </script>
