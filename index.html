@@ -148,18 +148,31 @@
             </div>
         </div>
 
-        <!-- ADMIN PANEL VIEW -->
+        <!-- ADMIN PANEL VIEW (Tabbed Layout) -->
         <div id="adminView" class="hidden space-y-6">
-            <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-sky-100 space-y-8">
-                <div>
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 pb-4 border-b border-sky-100 gap-4">
+            <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-sky-100 space-y-6">
+                
+                <!-- Admin Tab Navigation Buttons -->
+                <div class="flex flex-wrap gap-2 border-b border-sky-100 pb-4">
+                    <button onclick="switchAdminTab('subscribers')" id="adminTabSubBtn" class="bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center">
+                        <i class="fa-solid fa-users mr-2"></i> গ্রাহক ও বিল ম্যানেজমেন্ট
+                    </button>
+                    <button onclick="switchAdminTab('livetv')" id="adminTabTvBtn" class="bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center">
+                        <i class="fa-solid fa-tv mr-2"></i> লাইভ টিভি (.m3u8) ম্যানেজার
+                    </button>
+                    <button onclick="switchAdminTab('media')" id="adminTabMediaBtn" class="bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center">
+                        <i class="fa-solid fa-film mr-2"></i> মিডিয়া ও FTP সাইট
+                    </button>
+                </div>
+
+                <!-- TAB 1: Subscribers & CSV Upload -->
+                <div id="adminTabSubscribers" class="space-y-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center bg-sky-50 p-4 rounded-2xl border border-sky-200 gap-4">
                         <div>
-                            <h2 class="text-xl font-black text-slate-900">এডমিন ম্যানেজমেন্ট প্যানেল</h2>
-                            <p class="text-xs text-slate-500 mt-0.5">গ্রাহকের বিল আপডেট ও হোয়াটসঅ্যাপ রিমাইন্ডার</p>
+                            <h3 class="font-bold text-sm text-slate-900">গ্রাহক ডাটা CSV ফাইল আপলোড</h3>
+                            <p class="text-xs text-slate-500">নতুন গ্রাহক তালিকা যুক্ত করতে CSV ফাইল আপলোড করুন</p>
                         </div>
-                        
-                        <!-- Fixed CSV Upload Section with Dedicated Button -->
-                        <div class="flex items-center gap-3 flex-wrap bg-sky-50 p-3 rounded-2xl border border-sky-200">
+                        <div class="flex items-center gap-3 flex-wrap">
                             <input type="file" id="csvFileInput" accept=".csv" class="text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white hover:file:bg-sky-700 cursor-pointer">
                             <button onclick="uploadCsvFile()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center">
                                 <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> আপলোড কনফার্ম করুন
@@ -167,7 +180,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="flex justify-between items-center">
                         <input type="text" id="adminSearchInput" onkeyup="filterAdminTable()" placeholder="নম্বর বা নাম দিয়ে গ্রাহক খুঁজুন..." class="tv-focusable w-full sm:w-80 px-4 py-2.5 bg-sky-50/50 border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
                     </div>
 
@@ -192,27 +205,59 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-sky-100">
-                    <div class="bg-sky-50/50 p-5 rounded-2xl border border-sky-200">
-                        <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center"><i class="fa-solid fa-tv text-sky-600 mr-2"></i> লাইভ টিভি (.m3u8) ম্যানেজমেন্ট</h3>
-                        <div class="space-y-3 mb-4">
-                            <input type="text" id="newTvTitle" placeholder="চ্যানেলের নাম" class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
-                            <input type="text" id="newTvUrl" placeholder="M3U8 স্ট্রিম লিংক" class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
-                            <button onclick="addLiveTV()" class="tv-focusable w-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm">চ্যানেল যোগ করুন</button>
+                <!-- TAB 2: Live TV Management (.m3u8 URL & File Upload) -->
+                <div id="adminTabLivetv" class="hidden space-y-6">
+                    <div class="bg-sky-50/60 p-6 rounded-2xl border border-sky-200 max-w-2xl mx-auto space-y-4">
+                        <h3 class="font-bold text-base text-slate-900 flex items-center"><i class="fa-solid fa-tv text-sky-600 mr-2"></i> লাইভ টিভি চ্যানেল যুক্ত করুন</h3>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">চ্যানেলের নাম:</label>
+                                <input type="text" id="newTvTitle" placeholder="যেমন: T Sports HD" class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">M3U8 স্ট্রিম লিংক পেস্ট করুন:</label>
+                                <input type="text" id="newTvUrl" placeholder="https://..." class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
+                            </div>
+                            <button onclick="addLiveTV()" class="tv-focusable w-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-md">চ্যানেল লিংক সেভ করুন</button>
                         </div>
-                        <div id="adminTvList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+
+                        <div class="pt-4 border-t border-sky-200">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">অথবা .m3u8 বা .txt ফাইল আপলোড করুন:</label>
+                            <input type="file" id="m3u8FileInput" accept=".m3u8,.txt" class="w-full text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white hover:file:bg-sky-700 cursor-pointer" onchange="handleM3u8FileUpload(event)">
+                        </div>
                     </div>
 
-                    <div class="bg-sky-50/50 p-5 rounded-2xl border border-sky-200">
-                        <h3 class="font-bold text-sm text-slate-900 mb-3 flex items-center"><i class="fa-solid fa-film text-blue-600 mr-2"></i> মিডিয়া সাইট লিংক ম্যানেজমেন্ট</h3>
-                        <div class="space-y-3 mb-4">
-                            <input type="text" id="newMediaTitle" placeholder="সাইটের নাম" class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
-                            <input type="text" id="newMediaUrl" placeholder="লিংক (https://...)" class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
-                            <button onclick="addMediaSite()" class="tv-focusable w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-sm">মিডিয়া সাইট যোগ করুন</button>
-                        </div>
-                        <div id="adminMediaList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+                    <div class="max-w-2xl mx-auto">
+                        <h4 class="font-bold text-sm text-slate-800 mb-2">বর্তমান চ্যানেলসমূহ:</h4>
+                        <div id="adminTvList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
+
+                <!-- TAB 3: Media & FTP Site Management -->
+                <div id="adminTabMedia" class="hidden space-y-6">
+                    <div class="bg-sky-50/60 p-6 rounded-2xl border border-sky-200 max-w-2xl mx-auto space-y-4">
+                        <h3 class="font-bold text-base text-slate-900 flex items-center"><i class="fa-solid fa-film text-blue-600 mr-2"></i> মিডিয়া ও FTP সাইট যুক্ত করুন</h3>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">সাইটের নাম:</label>
+                                <input type="text" id="newMediaTitle" placeholder="যেমন: BDIX Movie FTP" class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">ওয়েবসাইট বা FTP লিংক:</label>
+                                <input type="text" id="newMediaUrl" placeholder="http://..." class="tv-focusable w-full p-3 bg-white border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
+                            </div>
+                            <button onclick="addMediaSite()" class="tv-focusable w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 rounded-xl transition shadow-md">মিডিয়া সাইট সেভ করুন</button>
+                        </div>
+                    </div>
+
+                    <div class="max-w-2xl mx-auto">
+                        <h4 class="font-bold text-sm text-slate-800 mb-2">বর্তমান মিডিয়া সাইটসমূহ:</h4>
+                        <div id="adminMediaList" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -273,15 +318,18 @@
         </div>
     </div>
 
-    <!-- Packages Modal -->
+    <!-- Packages Modal (Updated with all plans) -->
     <div id="packagesModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative border border-sky-100 text-slate-900">
             <button onclick="closePackagesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-xl font-bold text-slate-900 mb-4"><span class="text-sky-600 mr-2"><i class="fa-solid fa-box-open"></i></span> Internet Packages</h3>
+            <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center"><span class="text-sky-600 mr-2"><i class="fa-solid fa-box-open"></i></span> Internet Packages</h3>
             <div class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
                 <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">DURONTO_20Mbps</h4><p class="text-xs text-slate-500">20 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳500</span></div>
                 <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">AGAMI_30Mbps</h4><p class="text-xs text-slate-500">30 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳800</span></div>
+                <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">BIJOY_40Mbps</h4><p class="text-xs text-slate-500">40 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳1,000</span></div>
+                <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">BLAZE_50Mbps</h4><p class="text-xs text-slate-500">50 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳1,200</span></div>
                 <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">TURBO_60Mbps</h4><p class="text-xs text-slate-500">60 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳1,500</span></div>
+                <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">INFINITY_100Mbps</h4><p class="text-xs text-slate-500">100 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳2,000</span></div>
             </div>
             <div class="mt-6 text-right"><button onclick="closePackagesModal()" class="tv-focusable bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-4 py-2 rounded-xl">বন্ধ করুন</button></div>
         </div>
@@ -432,6 +480,31 @@
             localStorage.setItem('peoples_media', JSON.stringify(mediaSites));
         }
 
+        // Admin Tab Switcher Logic
+        function switchAdminTab(tabName) {
+            document.getElementById('adminTabSubscribers').classList.add('hidden');
+            document.getElementById('adminTabLivetv').classList.add('hidden');
+            document.getElementById('adminTabMedia').classList.add('hidden');
+
+            document.getElementById('adminTabSubBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center";
+            document.getElementById('adminTabTvBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center";
+            document.getElementById('adminTabMediaBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center";
+
+            if(tabName === 'subscribers') {
+                document.getElementById('adminTabSubscribers').classList.remove('hidden');
+                document.getElementById('adminTabSubBtn').className = "bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center";
+                loadAdminTable();
+            } else if(tabName === 'livetv') {
+                document.getElementById('adminTabLivetv').classList.remove('hidden');
+                document.getElementById('adminTabTvBtn').className = "bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center";
+                renderAdminTvList();
+            } else if(tabName === 'media') {
+                document.getElementById('adminTabMedia').classList.remove('hidden');
+                document.getElementById('adminTabMediaBtn').className = "bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center";
+                renderAdminMediaList();
+            }
+        }
+
         function showLiveTVModal() {
             document.getElementById('liveTvModal').classList.remove('hidden');
             renderClientTvList();
@@ -523,13 +596,10 @@
             } else {
                 document.getElementById('clientView').classList.add('hidden');
                 document.getElementById('adminView').classList.remove('hidden');
-                loadAdminTable();
-                renderAdminTvList();
-                renderAdminMediaList();
+                switchAdminTab('subscribers'); // Default admin tab
             }
         }
 
-        // Fixed CSV File Upload Function with Dedicated Button
         function uploadCsvFile() {
             const fileInput = document.getElementById('csvFileInput');
             const file = fileInput.files[0];
@@ -558,7 +628,7 @@
                         saveToStorage();
                         loadAdminTable();
                         alert(`সফলভাবে ${subscribers.length} জন গ্রাহকের ডাটা আপলোড এবং সেভ করা হয়েছে!`);
-                        fileInput.value = ''; // Reset input
+                        fileInput.value = '';
                     } else {
                         alert("ফাইল থেকে সঠিক ডাটা পাওয়া যায়নি।");
                     }
@@ -611,33 +681,72 @@
         function addLiveTV() {
             let title = document.getElementById('newTvTitle').value.trim();
             let url = document.getElementById('newTvUrl').value.trim();
-            if(!title || !url) return;
+            if(!title || !url) {
+                alert("দয়া করে চ্যানেলের নাম এবং M3U8 লিংক দিন।");
+                return;
+            }
             liveTvChannels.push({ title, url });
             saveToStorage();
+            document.getElementById('newTvTitle').value = '';
+            document.getElementById('newTvUrl').value = '';
             renderAdminTvList();
-            alert("চ্যানেল যোগ করা হয়েছে!");
+            alert("চ্যানেল সফলভাবে যোগ করা হয়েছে!");
         }
+
+        function handleM3u8FileUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const lines = content.split('\n');
+                let addedCount = 0;
+                let currentTitle = "Live Channel";
+
+                lines.forEach(line => {
+                    line = line.trim();
+                    if(line.startsWith('#EXTINF:')) {
+                        let parts = line.split(',');
+                        if(parts.length > 1) currentTitle = parts[1].trim();
+                    } else if(line && !line.startsWith('#')) {
+                        liveTvChannels.push({ title: currentTitle, url: line });
+                        addedCount++;
+                    }
+                });
+
+                saveToStorage();
+                renderAdminTvList();
+                alert(`ফাইল থেকে সফলভাবে ${addedCount}টি চ্যানেল যোগ করা হয়েছে!`);
+            };
+            reader.readAsText(file);
+        }
+
         function renderAdminTvList() {
             let container = document.getElementById('adminTvList');
             container.innerHTML = '';
             liveTvChannels.forEach((ch, idx) => {
-                container.innerHTML += `<div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-sky-200 text-xs text-slate-700"><span>${ch.title}</span><button onclick="liveTvChannels.splice(${idx},1);saveToStorage();renderAdminTvList();" class="text-rose-600 font-bold">ডিলিট</button></div>`;
+                container.innerHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-sky-200 text-xs text-slate-700"><span><strong>${idx+1}.</strong> ${ch.title}</span><button onclick="liveTvChannels.splice(${idx},1);saveToStorage();renderAdminTvList();" class="text-rose-600 font-bold">ডিলিট</button></div>`;
             });
         }
+
         function addMediaSite() {
             let title = document.getElementById('newMediaTitle').value.trim();
             let url = document.getElementById('newMediaUrl').value.trim();
             if(!title || !url) return;
             mediaSites.push({ title, url });
             saveToStorage();
+            document.getElementById('newMediaTitle').value = '';
+            document.getElementById('newMediaUrl').value = '';
             renderAdminMediaList();
             alert("মিডিয়া সাইট যোগ হয়েছে!");
         }
+
         function renderAdminMediaList() {
             let container = document.getElementById('adminMediaList');
             container.innerHTML = '';
             mediaSites.forEach((m, idx) => {
-                container.innerHTML += `<div class="flex justify-between items-center bg-white p-2.5 rounded-xl border border-sky-200 text-xs text-slate-700"><span>${m.title}</span><button onclick="mediaSites.splice(${idx},1);saveToStorage();renderAdminMediaList();" class="text-rose-600 font-bold">ডিলিট</button></div>`;
+                container.innerHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-sky-200 text-xs text-slate-700"><span>${m.title}</span><button onclick="mediaSites.splice(${idx},1);saveToStorage();renderAdminMediaList();" class="text-rose-600 font-bold">ডিলিট</button></div>`;
             });
         }
     </script>
