@@ -18,7 +18,6 @@
         }
         .matrix-text { animation: matrixGlow 1.5s infinite; }
 
-        /* স্ক্রলবার হাইড করার CSS */
         ::-webkit-scrollbar {
             width: 0px;
             height: 0px;
@@ -28,7 +27,6 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
-        /* টিভি রিমোট ফোকাস স্টাইল */
         .tv-focusable:focus, .tv-focusable.focused {
             outline: 3px solid #e11d48 !important;
             transform: scale(1.03);
@@ -38,8 +36,8 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans selection:bg-rose-500 selection:text-white" onkeydown="handleTVRemote(event)">
 
-    <!-- Mode Selection Popup (First Launch / Reset) -->
-    <div id="modeSelectModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+    <!-- Mode Selection Popup with Dedicated Reset Option -->
+    <div id="modeSelectModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-8 shadow-2xl text-center space-y-6">
             <div class="w-16 h-16 bg-rose-500/10 text-rose-500 rounded-2xl flex items-center justify-center mx-auto text-3xl border border-rose-500/20 shadow-inner">
                 <i class="fa-solid fa-display"></i>
@@ -82,7 +80,7 @@
     <div id="updateBanner" class="bg-gradient-to-r from-rose-600 via-indigo-600 to-purple-600 text-white text-xs px-4 py-2.5 text-center font-semibold flex items-center justify-between shadow-lg z-40 sticky top-0">
         <div class="flex items-center justify-center space-x-2 w-full truncate">
             <i class="fa-solid fa-bullhorn animate-bounce text-yellow-300"></i>
-            <span><strong>আপডেট নোটিফিকেশন:</strong> নতুন রিমোট ফ্রেন্ডলি টিভি মোড যুক্ত হয়েছে। হটলাইন: <strong>01580-44506</strong></span>
+            <span><strong>আপডেট নোটিফিকেশন:</strong> হটলাইন নম্বর <strong>01580-441506</strong> এবং ডেডিকেটেড রিসেট বাটন যুক্ত করা হয়েছে।</span>
         </div>
         <button onclick="document.getElementById('updateBanner').remove()" class="text-white hover:text-slate-200 ml-4 font-bold px-2 py-0.5 bg-black/20 rounded-lg"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -102,7 +100,7 @@
         </div>
     </div>
 
-    <!-- Header / Navigation Bar -->
+    <!-- Header / Navigation Bar with Dedicated Reset Button -->
     <header id="mainHeader" class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-[37px] z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-2">
@@ -125,9 +123,9 @@
                 <button onclick="openAdminModal()" id="btnAdminTab" class="tv-focusable bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700">
                     <i class="fa-solid fa-lock mr-1.5"></i> Admin
                 </button>
-                <!-- Switch Mode Button -->
-                <button onclick="resetAppMode()" class="tv-focusable bg-slate-800 hover:bg-slate-700 text-amber-400 px-3 py-2.5 rounded-xl font-semibold transition text-sm border border-slate-700" title="মোড পরিবর্তন করুন">
-                    <i class="fa-solid fa-shuffle"></i>
+                <!-- Dedicated Reset Mode Button -->
+                <button onclick="resetAppMode()" class="tv-focusable bg-amber-600 hover:bg-amber-500 text-white px-4 py-2.5 rounded-xl font-bold transition text-sm flex items-center shadow-lg shadow-amber-600/20" title="অ্যাপ মোড রিসেট করুন">
+                    <i class="fa-solid fa-rotate-right mr-1.5"></i> মোড রিসেট
                 </button>
             </div>
         </div>
@@ -159,7 +157,7 @@
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1 flex items-center bg-slate-950 border border-slate-800 rounded-xl focus-within:ring-2 focus-within:ring-rose-500">
                         <span class="pl-4 pr-1 text-rose-500 font-bold text-base select-none">0</span>
-                        <input type="text" id="clientSearchInput" placeholder="158044506 (বাকি নম্বর দিন)" class="tv-focusable w-full py-3.5 pr-4 bg-transparent text-white focus:outline-none text-sm font-medium">
+                        <input type="text" id="clientSearchInput" placeholder="1580441506 (বাকি নম্বর দিন)" class="tv-focusable w-full py-3.5 pr-4 bg-transparent text-white focus:outline-none text-sm font-medium">
                     </div>
                     <button onclick="searchClient()" class="tv-focusable bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-3.5 rounded-xl transition flex items-center justify-center shadow-lg shadow-rose-600/30">
                         <i class="fa-solid fa-search mr-2"></i> খোঁজ করুন
@@ -245,7 +243,10 @@
                     <span class="text-rose-500 mr-2"><i class="fa-solid fa-tv"></i></span> <span id="currentPlayingTitle" class="truncate">লাইভ টিভি প্লেয়ার</span>
                 </h3>
                 <div class="flex items-center space-x-2">
-                    <span class="text-[11px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 hidden sm:inline"><i class="fa-solid fa-arrows-up-down text-rose-400 mr-1"></i> রিমোটের Up/Down চেপে চ্যানেল বদলান</span>
+                    <!-- TV Mode Dedicated Reset Button inside Player Bar -->
+                    <button onclick="resetAppMode()" class="tv-focusable bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md">
+                        <i class="fa-solid fa-rotate-right mr-1.5"></i> মোড রিসেট
+                    </button>
                     <button onclick="toggleVideoFullscreen()" class="tv-focusable bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center shadow-md">
                         <i class="fa-solid fa-expand mr-1.5"></i> ফুল স্ক্রিন
                     </button>
@@ -305,21 +306,43 @@
     </div>
 
     <!-- WhatsApp Floating Button -->
-    <a id="whatsappBtn" href="https://wa.me/880158044506" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition transform hover:scale-110 z-30 text-2xl" title="Hotline WhatsApp">
+    <a id="whatsappBtn" href="https://wa.me/8801580441506" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition transform hover:scale-110 z-30 text-2xl" title="Hotline WhatsApp: 01580441506">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
     <!-- Footer -->
     <footer id="mainFooter" class="bg-slate-950 border-t border-slate-900 mt-12 py-6 text-center text-slate-500 text-xs">
-        <p>&copy; 2026 Peoples Communication. Hotline: <span class="font-bold text-slate-300">01580-44506</span></p>
+        <p>&copy; 2026 Peoples Communication. Hotline: <span class="font-bold text-slate-300">01580-441506</span></p>
     </footer>
 
-    <!-- JavaScript Logic & TV Remote Support -->
+    <!-- JavaScript Logic -->
     <script>
         let currentChannelIndex = 0;
 
-        // Mode Management
         window.addEventListener('DOMContentLoaded', () => {
+            const logs = ["> Decrypting client database nodes...", "> Loading M3U8 streaming clusters...", "> System initialized!"];
+            let bar = document.getElementById('loaderBar');
+            let term = document.getElementById('terminalLogs');
+            let loader = document.getElementById('hackerLoader');
+            let width = 0;
+
+            let interval = setInterval(() => {
+                width += 34;
+                if(bar) bar.style.width = width + '%';
+                if(width >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        if(loader) {
+                            loader.style.opacity = '0';
+                            setTimeout(() => loader.remove(), 500);
+                        }
+                        checkAppMode();
+                    }, 300);
+                }
+            }, 200);
+        });
+
+        function checkAppMode() {
             const savedMode = localStorage.getItem('peoples_app_mode');
             if(!savedMode) {
                 document.getElementById('modeSelectModal').classList.remove('hidden');
@@ -327,58 +350,49 @@
                 document.getElementById('modeSelectModal').classList.add('hidden');
                 applyAppMode(savedMode);
             }
-
-            // Hacker Loader animation
-            const logs = ["> Decrypting client database nodes...", "> Loading M3U8 streaming clusters...", "> System initialized!"];
-            let bar = document.getElementById('loaderBar');
-            let term = document.getElementById('terminalLogs');
-            let loader = document.getElementById('hackerLoader');
-            let width = 0;
-            let interval = setInterval(() => {
-                width += 34;
-                bar.style.width = width + '%';
-                if(width >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => { loader.style.opacity = '0'; setTimeout(() => loader.remove(), 500); }, 300);
-                }
-            }, 200);
-        });
+        }
 
         function setAppMode(mode) {
             localStorage.setItem('peoples_app_mode', mode);
             document.getElementById('modeSelectModal').classList.add('hidden');
             applyAppMode(mode);
             if(mode === 'tv') {
-                showLiveTVModal(); // TV মোডে সরাসরি লাইভ টিভি ওপেন হবে
+                showLiveTVModal();
             }
         }
 
         function resetAppMode() {
             localStorage.removeItem('peoples_app_mode');
+            // Hide modals if open
+            document.getElementById('liveTvModal').classList.add('hidden');
             document.getElementById('modeSelectModal').classList.remove('hidden');
         }
 
         function applyAppMode(mode) {
+            const mainHeader = document.getElementById('mainHeader');
+            const heroSection = document.getElementById('heroSection');
+            const mainContent = document.querySelector('main');
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            const mainFooter = document.getElementById('mainFooter');
+
             if(mode === 'tv') {
-                // TV মোডে শুধুমাত্র লাইভ টিভি ও রিমোট ফিচার থাকবে, বাকিগুলো হাইড হবে
-                document.getElementById('mainHeader').style.display = 'none';
-                document.getElementById('heroSection').style.display = 'none';
-                document.querySelector('main').style.display = 'none';
-                document.getElementById('whatsappBtn').style.display = 'none';
-                document.getElementById('mainFooter').style.display = 'none';
+                if(mainHeader) mainHeader.style.display = 'none';
+                if(heroSection) heroSection.style.display = 'none';
+                if(mainContent) mainContent.style.display = 'none';
+                if(whatsappBtn) whatsappBtn.style.display = 'none';
+                if(mainFooter) mainFooter.style.display = 'none';
             } else {
-                // Mobile মোডে সব ফিচার শো করবে
-                document.getElementById('mainHeader').style.display = 'block';
-                document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('main').style.display = 'block';
-                document.getElementById('whatsappBtn').style.display = 'flex';
-                document.getElementById('mainFooter').style.display = 'block';
+                if(mainHeader) mainHeader.style.display = 'block';
+                if(heroSection) heroSection.style.display = 'block';
+                if(mainContent) mainContent.style.display = 'block';
+                if(whatsappBtn) whatsappBtn.style.display = 'flex';
+                if(mainFooter) mainFooter.style.display = 'block';
             }
         }
 
         let defaultSubscribers = [
             {code: "PEOPLES-GX0MDI", name: "Sitol Munda", mobile: "1336637736", pppoe: "sm20-sitol", zone: "SURMA_20no_POP", package: "DURONTO_20Mbps", status: "active", expires: "11/18/2026", due: 500},
-            {code: "psm0007", name: "sm20-sihab", mobile: "158044506", pppoe: "sm20-sihab", zone: "SURMA_20no_POP", package: "TURBO_60Mbps", status: "active", expires: "11/22/2026", due: 0}
+            {code: "psm0007", name: "sm20-sihab", mobile: "1580441506", pppoe: "sm20-sihab", zone: "SURMA_20no_POP", package: "TURBO_60Mbps", status: "active", expires: "11/22/2026", due: 0}
         ];
 
         let defaultTvChannels = [
@@ -413,11 +427,12 @@
         function closeLiveTVModal() {
             document.getElementById('liveTvModal').classList.add('hidden');
             let player = document.getElementById('exoPlayer');
-            player.pause();
-            player.src = "";
+            if(player) {
+                player.pause();
+                player.src = "";
+            }
             const savedMode = localStorage.getItem('peoples_app_mode');
             if(savedMode === 'tv') {
-                // TV মোডে ব্যাক করলে বা ক্লোজ করলে অ্যাপ যাতে বন্ধ বা রি-লঞ্চ না হয়ে আবার টিভি মোড ঠিক থাকে
                 showLiveTVModal();
             }
         }
@@ -450,7 +465,6 @@
             });
         }
 
-        // TV Remote One-Click Channel Changing (Up/Down Arrow keys or CH+/CH- remote buttons)
         function handleTVRemote(e) {
             if(document.getElementById('liveTvModal').classList.contains('hidden')) return;
 
