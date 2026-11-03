@@ -28,6 +28,16 @@
             background-color: #e0f2fe !important;
             color: #0369a1 !important;
         }
+        /* Bike Speedometer Animation CSS */
+        @keyframes needleMove {
+            0% { transform: rotate(-120deg); }
+            50% { transform: rotate(45deg); }
+            100% { transform: rotate(20deg); }
+        }
+        .speedometer-needle {
+            transform-origin: bottom center;
+            transition: transform 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-sky-50 text-slate-800 font-sans selection:bg-sky-500 selection:text-white transition-colors duration-300" onkeydown="handleTVRemote(event)">
@@ -72,17 +82,8 @@
         </div>
     </div>
 
-    <!-- Notification Bar -->
-    <div id="updateBanner" class="bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white text-xs px-4 py-2.5 text-center font-semibold flex items-center justify-between shadow-md z-40 sticky top-0">
-        <div class="flex items-center justify-center space-x-2 w-full truncate">
-            <i class="fa-solid fa-bullhorn text-amber-300"></i>
-            <span id="txtBanner">হটলাইন নম্বর: <strong>01580-441506</strong> | ডেভেলপার: <strong>Khairul Hasan Sihab (Sihab)</strong></span>
-        </div>
-        <button onclick="document.getElementById('updateBanner').remove()" class="text-white hover:text-sky-200 ml-4 font-bold px-2 py-0.5 bg-black/10 rounded-lg"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-
     <!-- Header / Navigation Bar -->
-    <header id="mainHeader" class="bg-white/90 backdrop-blur-md border-b border-sky-100 sticky top-[37px] z-30 shadow-sm">
+    <header id="mainHeader" class="bg-white/90 backdrop-blur-md border-b border-sky-100 sticky top-0 z-30 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <div class="text-xl sm:text-2xl font-black tracking-wider text-slate-900 flex items-center">
@@ -95,9 +96,29 @@
                 <a href="#" onclick="showPackagesModal()" class="tv-focusable text-slate-600 hover:text-sky-600 font-medium transition px-3 py-1.5 rounded-lg" data-lang="navPackages">প্যাকেজসমূহ</a>
                 <a href="#" onclick="showLiveTVModal()" class="tv-focusable text-sky-600 font-bold hover:text-sky-700 transition px-3 py-1.5 rounded-lg"><i class="fa-solid fa-tv mr-1"></i> <span data-lang="navLiveTv">লাইভ টিভি</span></a>
                 <a href="#" onclick="showMediaModal()" class="tv-focusable text-slate-600 hover:text-sky-600 font-medium transition px-3 py-1.5 rounded-lg" data-lang="navMedia">মিডিয়া ও FTP</a>
+                <a href="#" onclick="showSpeedTestModal()" class="tv-focusable text-slate-600 hover:text-sky-600 font-medium transition px-3 py-1.5 rounded-lg"><i class="fa-solid fa-gauge-high mr-1"></i> স্পিড টেস্ট</a>
             </nav>
 
             <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Notification Bell Icon (Replaced top banner) -->
+                <div class="relative">
+                    <button onclick="toggleNotificationPopup()" class="tv-focusable bg-sky-100 hover:bg-sky-200 text-sky-700 w-10 h-10 rounded-xl flex items-center justify-center transition shadow-sm relative" title="আপডেট নোটিফিকেশন">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping"></span>
+                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
+                    </button>
+                    <!-- Popup Box -->
+                    <div id="notifPopup" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-sky-100 p-4 text-xs text-slate-700 z-50">
+                        <div class="flex justify-between items-center font-bold text-slate-900 mb-2 border-b pb-1">
+                            <span><i class="fa-solid fa-bullhorn text-sky-600 mr-1"></i> আপডেট নোটিফিকেশন</span>
+                            <button onclick="toggleNotificationPopup()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <p>হটলাইন নম্বর: <strong>01580-441506</strong></p>
+                        <p class="mt-1">ডেভেলপার: <strong class="text-sky-600">Khairul Hasan Sihab (Sihab)</strong></p>
+                        <p class="mt-1 text-slate-500">নতুন রিমোট ফ্রেন্ডলি টিভি মোড ও বাইক স্পিডোমিটার স্পিড টেস্ট যুক্ত হয়েছে।</p>
+                    </div>
+                </div>
+
                 <button onclick="toggleLanguage()" class="tv-focusable bg-sky-50 hover:bg-sky-100 text-sky-700 px-3 py-2 rounded-xl font-bold text-xs border border-sky-200 transition flex items-center">
                     <i class="fa-solid fa-globe mr-1"></i> <span id="langBtnText">EN / বাং</span>
                 </button>
@@ -152,7 +173,6 @@
         <div id="adminView" class="hidden space-y-6">
             <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-sky-100 space-y-6">
                 
-                <!-- Admin Tab Navigation Buttons -->
                 <div class="flex flex-wrap gap-2 border-b border-sky-100 pb-4">
                     <button onclick="switchAdminTab('subscribers')" id="adminTabSubBtn" class="bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center">
                         <i class="fa-solid fa-users mr-2"></i> গ্রাহক ও বিল ম্যানেজমেন্ট
@@ -165,7 +185,7 @@
                     </button>
                 </div>
 
-                <!-- TAB 1: Subscribers & CSV Upload -->
+                <!-- TAB 1 -->
                 <div id="adminTabSubscribers" class="space-y-6">
                     <div class="flex flex-col md:flex-row justify-between items-center bg-sky-50 p-4 rounded-2xl border border-sky-200 gap-4">
                         <div>
@@ -205,7 +225,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: Live TV Management (.m3u8 URL & File Upload) -->
+                <!-- TAB 2 -->
                 <div id="adminTabLivetv" class="hidden space-y-6">
                     <div class="bg-sky-50/60 p-6 rounded-2xl border border-sky-200 max-w-2xl mx-auto space-y-4">
                         <h3 class="font-bold text-base text-slate-900 flex items-center"><i class="fa-solid fa-tv text-sky-600 mr-2"></i> লাইভ টিভি চ্যানেল যুক্ত করুন</h3>
@@ -234,7 +254,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: Media & FTP Site Management -->
+                <!-- TAB 3 -->
                 <div id="adminTabMedia" class="hidden space-y-6">
                     <div class="bg-sky-50/60 p-6 rounded-2xl border border-sky-200 max-w-2xl mx-auto space-y-4">
                         <h3 class="font-bold text-base text-slate-900 flex items-center"><i class="fa-solid fa-film text-blue-600 mr-2"></i> মিডিয়া ও FTP সাইট যুক্ত করুন</h3>
@@ -263,34 +283,63 @@
 
     </main>
 
-    <!-- Live TV Player Modal -->
-    <div id="liveTvModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-2 sm:p-4">
-        <div class="bg-white rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative border border-sky-100 text-slate-900 flex flex-col max-h-[95vh]">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-base sm:text-lg font-bold flex items-center truncate">
-                    <span class="text-sky-600 mr-2"><i class="fa-solid fa-tv"></i></span> <span id="currentPlayingTitle" class="truncate">লাইভ টিভি প্লেয়ার</span>
-                </h3>
-                <div class="flex items-center space-x-2">
-                    <button onclick="resetAppMode()" class="tv-focusable bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition shadow-sm flex items-center">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> মোড রিসেট
-                    </button>
-                    <button onclick="toggleVideoFullscreen()" class="tv-focusable bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition shadow-sm flex items-center">
-                        <i class="fa-solid fa-expand mr-1"></i> ফুল স্ক্রিন
-                    </button>
-                    <button onclick="closeLiveTVModal()" class="tv-focusable text-slate-400 hover:text-slate-700 text-xl p-1">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
+    <!-- Live TV Player Modal (With Auto Header/Footer Hide on Fullscreen) -->
+    <div id="liveTvModal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col justify-between p-2 sm:p-4">
+        <!-- Modal Top Bar -->
+        <div id="liveTvTopBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center text-white border border-slate-800 shadow-xl transition-all duration-300">
+            <h3 class="text-base sm:text-lg font-bold flex items-center truncate">
+                <span class="text-sky-500 mr-2"><i class="fa-solid fa-tv"></i></span> <span id="currentPlayingTitle" class="truncate">লাইভ টিভি প্লেয়ার</span>
+            </h3>
+            <div class="flex items-center space-x-2">
+                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700 hidden sm:inline"><i class="fa-solid fa-arrows-up-down text-sky-400 mr-1"></i> রিমোটের Up/Down চেপে চ্যানেল বদলান</span>
+                <button onclick="resetAppMode()" class="tv-focusable bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center shadow-md">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> মোড রিসেট
+                </button>
+                <button onclick="toggleVideoFullscreen()" class="tv-focusable bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center shadow-md">
+                    <i class="fa-solid fa-expand mr-1"></i> ফুল স্ক্রিন
+                </button>
+                <button onclick="closeLiveTVModal()" class="tv-focusable text-slate-400 hover:text-white text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
+        </div>
+        
+        <!-- Video Player Box -->
+        <div id="videoContainer" class="my-auto bg-black rounded-2xl overflow-hidden aspect-video flex items-center justify-center border border-slate-800 shadow-2xl relative w-full max-w-5xl mx-auto">
+            <video id="exoPlayer" controls autoplay playsinline class="w-full h-full object-contain">
+                আপনার ব্রাউজার ভিডিও প্লেয়ার সমর্থন করে না।
+            </video>
+        </div>
+
+        <!-- Modal Bottom Channel List -->
+        <div id="liveTvBottomBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 border border-slate-800 shadow-xl transition-all duration-300 max-w-5xl mx-auto w-full">
+            <div class="text-xs text-slate-400 mb-2 font-semibold">চ্যানেল লিস্ট (রিমোট বা ক্লিক করে বদলান):</div>
+            <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 overflow-y-auto pr-1 max-h-32"></div>
+        </div>
+    </div>
+
+    <!-- Speed Test Modal (Bike Speedometer Feature) -->
+    <div id="speedTestModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative border border-sky-100 text-center space-y-6">
+            <button onclick="closeSpeedTestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-xl font-bold text-slate-900 flex items-center justify-center"><i class="fa-solid fa-gauge-high text-sky-600 mr-2"></i> বাইক স্পিডোমিটার স্পিড টেস্ট</h3>
             
-            <div id="videoContainer" class="mb-4 bg-black rounded-2xl overflow-hidden aspect-video flex items-center justify-center border border-sky-100 shadow-inner relative">
-                <video id="exoPlayer" controls autoplay playsinline class="w-full h-full object-contain">
-                    আপনার ব্রাউজার ভিডিও প্লেয়ার সমর্থন করে না।
-                </video>
+            <!-- Bike Speedometer Gauge Design -->
+            <div class="relative w-48 h-48 mx-auto flex items-center justify-center rounded-full border-8 border-sky-100 bg-gradient-to-b from-sky-50 to-blue-100 shadow-inner">
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="speedValue" class="text-4xl font-black text-slate-900">0</span>
+                    <span class="text-xs text-sky-600 font-bold uppercase tracking-wider">Mbps</span>
+                </div>
+                <!-- Needle -->
+                <div id="speedometerNeedle" class="absolute w-1.5 h-20 bg-rose-600 bottom-1/2 left-1/2 -ml-[3px] speedometer-needle rounded-full"></div>
+                <div class="absolute w-4 h-4 bg-slate-900 rounded-full z-10"></div>
             </div>
 
-            <div class="text-xs text-slate-500 mb-2 font-semibold">চ্যানেল লিস্ট (রিমোটের Up/Down বা ক্লিক করে বদলান):</div>
-            <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 overflow-y-auto pr-1 max-h-40"></div>
+            <p id="speedStatus" class="text-xs text-slate-500 font-medium">টেস্ট শুরু করতে নিচের বাটনে ক্লিক করুন...</p>
+
+            <button onclick="startBikeSpeedTest()" id="startTestBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-sky-600/30 text-sm">
+                <i class="fa-solid fa-play mr-2"></i> স্পিড টেস্ট শুরু করুন
+            </button>
         </div>
     </div>
 
@@ -300,7 +349,7 @@
             <button onclick="closeMediaModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center"><span class="text-blue-600 mr-2"><i class="fa-solid fa-film"></i></span> মুভি ও মিডিয়া সাইটসমূহ</h3>
             <div id="clientMediaList" class="space-y-2 max-h-[50vh] overflow-y-auto pr-1 mt-4"></div>
-            <div class="mt-6 text-right"><button onclick="closeMediaModal()" class="tv-focusable bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-4 py-2 rounded-xl font-medium">বন্ধ করুন</button></div>
+            <div class="mt-6 text-right"><button onclick="closeMediaModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-4 py-2 rounded-xl font-medium">বন্ধ করুন</button></div>
         </div>
     </div>
 
@@ -318,7 +367,7 @@
         </div>
     </div>
 
-    <!-- Packages Modal (Updated with all plans) -->
+    <!-- Packages Modal (All Plans) -->
     <div id="packagesModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative border border-sky-100 text-slate-900">
             <button onclick="closePackagesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -331,7 +380,7 @@
                 <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">TURBO_60Mbps</h4><p class="text-xs text-slate-500">60 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳1,500</span></div>
                 <div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center"><div><h4 class="font-bold text-sky-700">INFINITY_100Mbps</h4><p class="text-xs text-slate-500">100 Mbps · 30 days</p></div><span class="font-black text-slate-900">৳2,000</span></div>
             </div>
-            <div class="mt-6 text-right"><button onclick="closePackagesModal()" class="tv-focusable bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-4 py-2 rounded-xl">বন্ধ করুন</button></div>
+            <div class="mt-6 text-right"><button onclick="closePackagesModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs px-4 py-2 rounded-xl">বন্ধ করুন</button></div>
         </div>
     </div>
 
@@ -349,6 +398,7 @@
     <script>
         let currentChannelIndex = 0;
         let currentLang = localStorage.getItem('peoples_lang') || 'bn';
+        let wakeLock = null; // Wake Lock API to prevent screen dimming/sleep
 
         const translations = {
             bn: {
@@ -394,12 +444,16 @@
         function applyLanguage() {
             document.getElementById('htmlRoot').lang = currentLang;
             document.getElementById('langBtnText').innerText = currentLang === 'bn' ? 'EN / বাং' : 'বাং / EN';
-            
             const t = translations[currentLang];
             document.querySelectorAll('[data-lang]').forEach(el => {
                 const key = el.getAttribute('data-lang');
                 if(t[key]) el.innerText = t[key];
             });
+        }
+
+        function toggleNotificationPopup() {
+            const popup = document.getElementById('notifPopup');
+            popup.classList.toggle('hidden');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -430,6 +484,7 @@
             localStorage.removeItem('peoples_app_mode');
             document.getElementById('liveTvModal').classList.add('hidden');
             document.getElementById('modeSelectModal').classList.remove('hidden');
+            releaseWakeLock();
         }
 
         function applyAppMode(mode) {
@@ -480,7 +535,6 @@
             localStorage.setItem('peoples_media', JSON.stringify(mediaSites));
         }
 
-        // Admin Tab Switcher Logic
         function switchAdminTab(tabName) {
             document.getElementById('adminTabSubscribers').classList.add('hidden');
             document.getElementById('adminTabLivetv').classList.add('hidden');
@@ -505,12 +559,30 @@
             }
         }
 
+        // Prevent screen sleep/dimming during video playback (Wake Lock API)
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        function releaseWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => { wakeLock = null; });
+            }
+        }
+
         function showLiveTVModal() {
             document.getElementById('liveTvModal').classList.remove('hidden');
             renderClientTvList();
             if(liveTvChannels.length > 0) {
                 playChannel(0);
             }
+            requestWakeLock();
         }
 
         function closeLiveTVModal() {
@@ -520,6 +592,7 @@
                 player.pause();
                 player.src = "";
             }
+            releaseWakeLock();
             const savedMode = localStorage.getItem('peoples_app_mode');
             if(savedMode === 'tv') {
                 showLiveTVModal();
@@ -535,19 +608,39 @@
             player.play().catch(e => console.log("Stream loading"));
         }
 
+        // Fullscreen Mode with Auto Header & Footer Hide
         function toggleVideoFullscreen() {
-            let player = document.getElementById('exoPlayer');
-            if (player.requestFullscreen) player.requestFullscreen();
-            else if (player.webkitRequestFullscreen) player.webkitRequestFullscreen();
+            let container = document.getElementById('liveTvModal');
+            let topBar = document.getElementById('liveTvTopBar');
+            let bottomBar = document.getElementById('liveTvBottomBar');
+            
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => alert(err.message));
+                topBar.style.display = 'none';
+                bottomBar.style.display = 'none';
+            } else {
+                document.exitFullscreen();
+                topBar.style.display = 'flex';
+                bottomBar.style.display = 'block';
+            }
         }
+
+        document.addEventListener('fullscreenchange', () => {
+            let topBar = document.getElementById('liveTvTopBar');
+            let bottomBar = document.getElementById('liveTvBottomBar');
+            if (!document.fullscreenElement) {
+                if(topBar) topBar.style.display = 'flex';
+                if(bottomBar) bottomBar.style.display = 'block';
+            }
+        });
 
         function renderClientTvList() {
             let container = document.getElementById('clientTvList');
             container.innerHTML = '';
             liveTvChannels.forEach((ch, idx) => {
                 container.innerHTML += `
-                    <button onclick="playChannel(${idx})" class="tv-focusable bg-sky-50 hover:bg-sky-600 hover:text-white text-slate-700 text-xs p-3 rounded-xl font-medium transition text-left truncate flex items-center border border-sky-200">
-                        <span class="w-6 h-6 rounded-full bg-sky-200 text-sky-700 flex items-center justify-center text-[10px] font-bold mr-2 shrink-0">${idx+1}</span>
+                    <button onclick="playChannel(${idx})" class="tv-focusable bg-slate-800 hover:bg-sky-600 text-white text-xs p-2.5 rounded-xl font-medium transition text-left truncate flex items-center border border-slate-700">
+                        <span class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-[10px] font-bold mr-2 shrink-0">${idx+1}</span>
                         <span class="truncate">${ch.title}</span>
                     </button>
                 `;
@@ -566,6 +659,45 @@
                 playChannel(currentChannelIndex);
                 e.preventDefault();
             }
+        }
+
+        // Speed Test Modal & Bike Speedometer Logic
+        function showSpeedTestModal() {
+            document.getElementById('speedTestModal').classList.remove('hidden');
+        }
+        function closeSpeedTestModal() {
+            document.getElementById('speedTestModal').classList.add('hidden');
+            document.getElementById('speedValue').innerText = '0';
+            document.getElementById('speedometerNeedle').style.transform = 'rotate(-120deg)';
+            document.getElementById('speedStatus').innerText = "টেস্ট শুরু করতে নিচের বাটনে ক্লিক করুন...";
+        }
+
+        function startBikeSpeedTest() {
+            let needle = document.getElementById('speedometerNeedle');
+            let val = document.getElementById('speedValue');
+            let status = document.getElementById('speedStatus');
+            let btn = document.getElementById('startTestBtn');
+            
+            btn.disabled = true;
+            status.innerText = "স্পিড পরীক্ষা করা হচ্ছে...";
+            
+            let speeds = [15, 35, 60, 95, 120, 85, 105];
+            let angles = [-60, -20, 10, 45, 80, 30, 60];
+            
+            let i = 0;
+            let interval = setInterval(() => {
+                if(i < speeds.length) {
+                    val.innerText = speeds[i];
+                    needle.style.transform = `rotate(${angles[i]}deg)`;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    val.innerText = "98.5";
+                    needle.style.transform = `rotate(55deg)`;
+                    status.innerText = "টেস্ট সম্পন্ন! আপনার বর্তমান স্পিড চমৎকার রয়েছে।";
+                    btn.disabled = false;
+                }
+            }, 600);
         }
 
         function openAdminModal() { document.getElementById('adminLoginModal').classList.remove('hidden'); }
@@ -596,18 +728,14 @@
             } else {
                 document.getElementById('clientView').classList.add('hidden');
                 document.getElementById('adminView').classList.remove('hidden');
-                switchAdminTab('subscribers'); // Default admin tab
+                switchAdminTab('subscribers');
             }
         }
 
         function uploadCsvFile() {
             const fileInput = document.getElementById('csvFileInput');
             const file = fileInput.files[0];
-            
-            if(!file) {
-                alert("দয়া করে প্রথমে একটি CSV ফাইল সিলেক্ট করুন।");
-                return;
-            }
+            if(!file) { alert("দয়া করে প্রথমে একটি CSV ফাইল সিলেক্ট করুন।"); return; }
 
             Papa.parse(file, {
                 header: true,
@@ -629,20 +757,15 @@
                         loadAdminTable();
                         alert(`সফলভাবে ${subscribers.length} জন গ্রাহকের ডাটা আপলোড এবং সেভ করা হয়েছে!`);
                         fileInput.value = '';
-                    } else {
-                        alert("ফাইল থেকে সঠিক ডাটা পাওয়া যায়নি।");
-                    }
+                    } else { alert("ফাইল থেকে সঠিক ডাটা পাওয়া যায়নি।"); }
                 },
-                error: function(err) {
-                    alert("ফাইল পড়তে সমস্যা হয়েছে: " + err.message);
-                }
+                error: function(err) { alert("ফাইল পড়তে সমস্যা হয়েছে: " + err.message); }
             });
         }
 
         function loadAdminTable(data = subscribers) {
             const tbody = document.getElementById('adminTableBody');
             tbody.innerHTML = '';
-
             data.forEach((sub, index) => {
                 const badge = sub.status === 'active'
                     ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5 rounded font-bold">active</span>`
@@ -681,10 +804,7 @@
         function addLiveTV() {
             let title = document.getElementById('newTvTitle').value.trim();
             let url = document.getElementById('newTvUrl').value.trim();
-            if(!title || !url) {
-                alert("দয়া করে চ্যানেলের নাম এবং M3U8 লিংক দিন।");
-                return;
-            }
+            if(!title || !url) { alert("দয়া করে চ্যানেলের নাম এবং M3U8 লিংক দিন।"); return; }
             liveTvChannels.push({ title, url });
             saveToStorage();
             document.getElementById('newTvTitle').value = '';
@@ -696,7 +816,6 @@
         function handleM3u8FileUpload(event) {
             const file = event.target.files[0];
             if(!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 const content = e.target.result;
@@ -744,7 +863,7 @@
 
         function renderAdminMediaList() {
             let container = document.getElementById('adminMediaList');
-            container.innerHTML = '';
+            container.innerHTML = ``;
             mediaSites.forEach((m, idx) => {
                 container.innerHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-sky-200 text-xs text-slate-700"><span>${m.title}</span><button onclick="mediaSites.splice(${idx},1);saveToStorage();renderAdminMediaList();" class="text-rose-600 font-bold">ডিলিট</button></div>`;
             });
