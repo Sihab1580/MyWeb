@@ -44,14 +44,14 @@
 
 <main class="max-w-7xl mx-auto px-3 my-6">
  <div id="clientView" class="space-y-4">
-  <!-- মোবাইল ভিউয়ের জন্য ফাস্ট এক্সেস মেনু (লাইভ টিভি সহ) -->
+  <!-- মোবাইল ভিউয়ের জন্য ফাস্ট এক্সেস মেনু (লাইভ টিভি সহ যুক্ত করা হয়েছে) -->
   <div class="md:hidden grid grid-cols-4 gap-2 text-[11px] font-bold text-center">
-    <button onclick="show('packagesModal')" class="bg-white border border-sky-100 rounded-xl py-3"><i class="fa-solid fa-box block text-sky-600 text-lg mb-1"></i>প্যাকেজ</button>
-    <button onclick="showLiveTVModal()" class="bg-white border border-sky-100 rounded-xl py-3"><i class="fa-solid fa-tv block text-sky-600 text-lg mb-1"></i>লাইভ টিভি</button>
-    <button onclick="showMediaModal()" class="bg-white border border-sky-100 rounded-xl py-3"><i class="fa-solid fa-film block text-sky-600 text-lg mb-1"></i>মিডিয়া</button>
-    <button onclick="show('speedTestModal')" class="bg-white border border-sky-100 rounded-xl py-3"><i class="fa-solid fa-gauge-high block text-sky-600 text-lg mb-1"></i>স্পিড</button>
+    <button onclick="show('packagesModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-box block text-sky-600 text-lg mb-1"></i>প্যাকেজ</button>
+    <button onclick="showLiveTVModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-tv block text-sky-600 text-lg mb-1"></i>লাইভ টিভি</button>
+    <button onclick="showMediaModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-film block text-sky-600 text-lg mb-1"></i>মিডিয়া</button>
+    <button onclick="show('speedTestModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-gauge-high block text-sky-600 text-lg mb-1"></i>স্পিড</button>
   </div>
-  
+
   <div class="bg-white rounded-2xl shadow-xl p-5 sm:p-10 max-w-2xl mx-auto border border-sky-100">
    <div class="text-center mb-5">
     <h2 class="text-xl sm:text-2xl font-black" data-lang="selfCareTitle">গ্রাহক সেলফ কেয়ার পোর্টাল</h2>
@@ -123,7 +123,7 @@
  </div>
 </main>
 
-<!-- Live TV Modal (গ্রাহক ও এডমিন উভয়ের জন্য প্লেয়ার) -->
+<!-- Live TV Modal -->
 <div id="liveTvModal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col justify-between p-2 sm:p-4">
  <div class="bg-slate-900 rounded-2xl p-3 flex justify-between items-center text-white border border-slate-800">
   <h3 class="text-xs sm:text-lg font-bold truncate"><i class="fa-solid fa-tv text-sky-500 mr-2"></i><span id="currentPlayingTitle">লাইভ টিভি</span></h3>
