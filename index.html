@@ -35,7 +35,7 @@
         }
     </style>
 </head>
-<body class="bg-sky-50 text-slate-800 font-sans selection:bg-sky-500 selection:text-white transition-colors duration-300" onkeydown="handleTVRemote(event)">
+<body class="bg-sky-50 text-slate-800 font-sans selection:bg-sky-500 selection:text-white transition-colors duration-300 overflow-x-hidden" onkeydown="handleTVRemote(event)">
 
     <!-- Mode Selection Popup -->
     <div id="modeSelectModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -109,7 +109,7 @@
                         </div>
                         <p>হটলাইন নম্বর: <strong>01580-441506</strong></p>
                         <p class="mt-1">ডেভেলপার: <strong class="text-sky-600">Khairul Hasan Sihab (Sihab)</strong></p>
-                        <p class="mt-1 text-slate-500">স্ট্যান্ডার্ড স্পিড টেস্ট মিটার ও ফুল-স্ক্রিন লাইভ টিভি আপডেট যুক্ত হয়েছে।</p>
+                        <p class="mt-1 text-slate-500">রেসপন্সিভ মোবাইল ফিট ও স্ট্যান্ডার্ড স্পিড টেস্ট আপডেট যুক্ত হয়েছে।</p>
                     </div>
                 </div>
 
@@ -128,12 +128,12 @@
 
     <!-- Hero Section -->
     <div id="heroSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div class="rounded-3xl overflow-hidden shadow-xl relative border border-sky-100 bg-gradient-to-r from-sky-600 to-blue-700 text-white p-8 sm:p-12">
+        <div class="rounded-3xl overflow-hidden shadow-xl relative border border-sky-100 bg-gradient-to-r from-sky-600 to-blue-700 text-white p-6 sm:p-12">
             <div class="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px] opacity-10"></div>
             <div class="relative z-10 max-w-2xl">
                 <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mb-3 inline-block" data-lang="heroTag">বিশ্বস্ত ইন্টারনেট সেবা প্রদানকারী</span>
-                <h1 class="text-3xl sm:text-5xl font-black mb-4 tracking-tight" data-lang="heroTitle">উচ্চগতির ফাইবার অপটিক ব্রডব্যান্ড</h1>
-                <p class="text-sky-100 text-sm sm:text-base font-light" data-lang="heroDesc">আপনার ইন্টারনেট প্যাকেজ, মেয়াদ, লাইভ টিভি স্ট্রিম এবং চলতি মাসের বকেয়া বিল যেকোনো সময় এক ক্লিকে যাচাই করুন।</p>
+                <h1 class="text-2xl sm:text-5xl font-black mb-4 tracking-tight" data-lang="heroTitle">উচ্চগতির ফাইবার অপটিক ব্রডব্যান্ড</h1>
+                <p class="text-sky-100 text-xs sm:text-base font-light" data-lang="heroDesc">আপনার ইন্টারনেট প্যাকেজ, মেয়াদ, লাইভ টিভি স্ট্রিম এবং চলতি মাসের বকেয়া বিল যেকোনো সময় এক ক্লিকে যাচাই করুন।</p>
             </div>
         </div>
     </div>
@@ -143,7 +143,7 @@
         
         <!-- CLIENT SELF CARE VIEW -->
         <div id="clientView" class="space-y-6">
-            <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-10 max-w-2xl mx-auto border border-sky-100">
+            <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 max-w-2xl mx-auto border border-sky-100">
                 <div class="text-center mb-6">
                     <h2 class="text-2xl font-black text-slate-900" data-lang="selfCareTitle">গ্রাহক সেলফ কেয়ার পোর্টাল</h2>
                     <p class="text-xs text-slate-500 mt-1" data-lang="selfCareSub">আপনার মোবাইল নম্বর দিয়ে বর্তমান বিল ও প্যাকেজ স্ট্যাটাস দেখুন</p>
@@ -165,17 +165,17 @@
 
         <!-- ADMIN PANEL VIEW -->
         <div id="adminView" class="hidden space-y-6">
-            <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-sky-100 space-y-6">
+            <div class="bg-white rounded-3xl shadow-xl p-4 sm:p-8 border border-sky-100 space-y-6">
                 
                 <div class="flex flex-wrap gap-2 border-b border-sky-100 pb-4">
-                    <button onclick="switchAdminTab('subscribers')" id="adminTabSubBtn" class="bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center">
-                        <i class="fa-solid fa-users mr-2"></i> গ্রাহক ও বিল ম্যানেজমেন্ট
+                    <button onclick="switchAdminTab('subscribers')" id="adminTabSubBtn" class="bg-sky-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center">
+                        <i class="fa-solid fa-users mr-2"></i> গ্রাহক বিল
                     </button>
-                    <button onclick="switchAdminTab('livetv')" id="adminTabTvBtn" class="bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center">
-                        <i class="fa-solid fa-tv mr-2"></i> লাইভ টিভি (.m3u8) ম্যানেজার
+                    <button onclick="switchAdminTab('livetv')" id="adminTabTvBtn" class="bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center">
+                        <i class="fa-solid fa-tv mr-2"></i> লাইভ টিভি
                     </button>
-                    <button onclick="switchAdminTab('media')" id="adminTabMediaBtn" class="bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center">
-                        <i class="fa-solid fa-film mr-2"></i> মিডিয়া ও FTP সাইট
+                    <button onclick="switchAdminTab('media')" id="adminTabMediaBtn" class="bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center">
+                        <i class="fa-solid fa-film mr-2"></i> মিডিয়া সাইট
                     </button>
                 </div>
 
@@ -187,31 +187,31 @@
                             <p class="text-xs text-slate-500">নতুন গ্রাহক তালিকা যুক্ত করতে CSV ফাইল আপলোড করুন</p>
                         </div>
                         <div class="flex items-center gap-3 flex-wrap">
-                            <input type="file" id="csvFileInput" accept=".csv" class="text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white hover:file:bg-sky-700 cursor-pointer">
-                            <button onclick="uploadCsvFile()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center">
-                                <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> আপলোড কনফার্ম করুন
+                            <input type="file" id="csvFileInput" accept=".csv" class="text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-600 file:text-white hover:file:bg-sky-700 cursor-pointer w-full sm:w-auto">
+                            <button onclick="uploadCsvFile()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center w-full sm:w-auto justify-center">
+                                <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> আপলোড কনফার্ম
                             </button>
                         </div>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <input type="text" id="adminSearchInput" onkeyup="filterAdminTable()" placeholder="নম্বর বা নাম দিয়ে গ্রাহক খুঁজুন..." class="tv-focusable w-full sm:w-80 px-4 py-2.5 bg-sky-50/50 border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
+                        <input type="text" id="adminSearchInput" onkeyup="filterAdminTable()" placeholder="নম্বর বা নাম দিয়ে খুঁজুন..." class="tv-focusable w-full sm:w-80 px-4 py-2.5 bg-sky-50/50 border border-sky-200 rounded-xl text-sm text-slate-900 focus:outline-none">
                     </div>
 
-                    <div class="overflow-x-auto rounded-2xl border border-sky-100 bg-sky-50/30">
-                        <table class="w-full text-left border-collapse text-sm" id="adminTable">
-                            <thead class="bg-sky-100/60 text-slate-700 uppercase text-xs tracking-wider border-b border-sky-200">
+                    <div class="overflow-x-auto rounded-2xl border border-sky-100 bg-sky-50/35">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm min-w-[700px]" id="adminTable">
+                            <thead class="bg-sky-100/60 text-slate-700 uppercase text-[10px] sm:text-xs tracking-wider border-b border-sky-200">
                                 <tr>
-                                    <th class="p-3.5">Code</th>
-                                    <th class="p-3.5">Name</th>
-                                    <th class="p-3.5">Mobile</th>
-                                    <th class="p-3.5">PPPoE</th>
-                                    <th class="p-3.5">Package</th>
-                                    <th class="p-3.5">Status</th>
-                                    <th class="p-3.5">Expires</th>
-                                    <th class="p-3.5">Due (BDT)</th>
-                                    <th class="p-3.5">Action</th>
-                                    <th class="p-3.5">WhatsApp</th>
+                                    <th class="p-3">Code</th>
+                                    <th class="p-3">Name</th>
+                                    <th class="p-3">Mobile</th>
+                                    <th class="p-3">PPPoE</th>
+                                    <th class="p-3">Package</th>
+                                    <th class="p-3">Status</th>
+                                    <th class="p-3">Expires</th>
+                                    <th class="p-3">Due</th>
+                                    <th class="p-3">Action</th>
+                                    <th class="p-3">WA</th>
                                 </tr>
                             </thead>
                             <tbody id="adminTableBody" class="divide-y divide-sky-100 text-slate-700"></tbody>
@@ -277,15 +277,13 @@
 
     </main>
 
-    <!-- Live TV Player Modal (Auto Header/Footer Hide on Fullscreen & Wake Lock) -->
+    <!-- Live TV Player Modal -->
     <div id="liveTvModal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col justify-between p-2 sm:p-4">
-        <!-- Modal Top Bar -->
-        <div id="liveTvTopBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center text-white border border-slate-800 shadow-xl transition-all duration-300">
-            <h3 class="text-base sm:text-lg font-bold flex items-center truncate">
+        <div id="liveTvTopBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-3 sm:p-4 flex justify-between items-center text-white border border-slate-800 shadow-xl transition-all duration-300">
+            <h3 class="text-sm sm:text-lg font-bold flex items-center truncate">
                 <span class="text-sky-500 mr-2"><i class="fa-solid fa-tv"></i></span> <span id="currentPlayingTitle" class="truncate">লাইভ টিভি প্লেয়ার</span>
             </h3>
             <div class="flex items-center space-x-2">
-                <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700 hidden sm:inline"><i class="fa-solid fa-arrows-up-down text-sky-400 mr-1"></i> রিমোটের Up/Down চেপে চ্যানেল বদলান</span>
                 <button onclick="resetAppMode()" class="tv-focusable bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition flex items-center shadow-md">
                     <i class="fa-solid fa-rotate-right mr-1"></i> মোড রিসেট
                 </button>
@@ -298,41 +296,38 @@
             </div>
         </div>
         
-        <!-- Video Player Box -->
         <div id="videoContainer" class="my-auto bg-black rounded-2xl overflow-hidden aspect-video flex items-center justify-center border border-slate-800 shadow-2xl relative w-full max-w-5xl mx-auto">
             <video id="exoPlayer" controls autoplay playsinline class="w-full h-full object-contain">
                 আপনার ব্রাউজার ভিডিও প্লেয়ার সমর্থন করে না।
             </video>
         </div>
 
-        <!-- Modal Bottom Channel List -->
-        <div id="liveTvBottomBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 border border-slate-800 shadow-xl transition-all duration-300 max-w-5xl mx-auto w-full">
+        <div id="liveTvBottomBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-3 sm:p-4 border border-slate-800 shadow-xl transition-all duration-300 max-w-5xl mx-auto w-full">
             <div class="text-xs text-slate-400 mb-2 font-semibold">চ্যানেল লিস্ট (রিমোট বা ক্লিক করে বদলান):</div>
-            <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 overflow-y-auto pr-1 max-h-32"></div>
+            <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 overflow-y-auto pr-1 max-h-28"></div>
         </div>
     </div>
 
-    <!-- Speed Test Modal (Standard Gauge Meter like Ookla) -->
+    <!-- Speed Test Modal -->
     <div id="speedTestModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative border border-sky-100 text-center space-y-6">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-sky-100 text-center space-y-6">
             <button onclick="closeSpeedTestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
             
             <div class="flex justify-around text-xs text-slate-500 font-bold border-b pb-4">
-                <div><span class="text-sky-600 block"><i class="fa-solid fa-arrow-down"></i> DOWNLOAD</span> <span id="downSpeedText" class="text-lg text-slate-900">--</span> Mbps</div>
-                <div><span class="text-indigo-600 block"><i class="fa-solid fa-arrow-up"></i> UPLOAD</span> <span id="upSpeedText" class="text-lg text-slate-900">--</span> Mbps</div>
-                <div><span class="text-amber-600 block"><i class="fa-solid fa-stopwatch"></i> PING</span> <span id="pingText" class="text-lg text-slate-900">8</span> ms</div>
+                <div><span class="text-sky-600 block"><i class="fa-solid fa-arrow-down"></i> DOWNLOAD</span> <span id="downSpeedText" class="text-base sm:text-lg text-slate-900">--</span> Mbps</div>
+                <div><span class="text-indigo-600 block"><i class="fa-solid fa-arrow-up"></i> UPLOAD</span> <span id="upSpeedText" class="text-base sm:text-lg text-slate-900">--</span> Mbps</div>
+                <div><span class="text-amber-600 block"><i class="fa-solid fa-stopwatch"></i> PING</span> <span id="pingText" class="text-base sm:text-lg text-slate-900">8</span> ms</div>
             </div>
 
-            <!-- Gauge Meter Design (Matching Reference Image) -->
-            <div class="relative w-56 h-56 mx-auto flex items-center justify-center">
-                <!-- Circular Gauge SVG / Ring -->
+            <!-- Gauge Meter Design -->
+            <div class="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto flex items-center justify-center">
                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
                     <circle id="gaugeProgress" cx="50" cy="50" r="40" stroke="#0ea5e9" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="180" stroke-linecap="round" fill="transparent" class="transition-all duration-300" />
                 </svg>
                 
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span id="speedValue" class="text-4xl font-black text-slate-900">0.00</span>
+                    <span id="speedValue" class="text-3xl sm:text-4xl font-black text-slate-900">0.00</span>
                     <span class="text-xs text-sky-600 font-bold uppercase tracking-wider mt-1"><i class="fa-solid fa-arrow-down"></i> Mbps</span>
                 </div>
             </div>
@@ -369,7 +364,7 @@
         </div>
     </div>
 
-    <!-- Packages Modal (All Plans) -->
+    <!-- Packages Modal -->
     <div id="packagesModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative border border-sky-100 text-slate-900">
             <button onclick="closePackagesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
@@ -541,26 +536,25 @@
             document.getElementById('adminTabLivetv').classList.add('hidden');
             document.getElementById('adminTabMedia').classList.add('hidden');
 
-            document.getElementById('adminTabSubBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center";
-            document.getElementById('adminTabTvBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center";
-            document.getElementById('adminTabMediaBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-5 py-3 rounded-xl transition flex items-center";
+            document.getElementById('adminTabSubBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center";
+            document.getElementById('adminTabTvBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center";
+            document.getElementById('adminTabMediaBtn').className = "bg-sky-100 text-sky-700 hover:bg-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center";
 
             if(tabName === 'subscribers') {
                 document.getElementById('adminTabSubscribers').classList.remove('hidden');
-                document.getElementById('adminTabSubBtn').className = "bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center";
+                document.getElementById('adminTabSubBtn').className = "bg-sky-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center";
                 loadAdminTable();
             } else if(tabName === 'livetv') {
                 document.getElementById('adminTabLivetv').classList.remove('hidden');
-                document.getElementById('adminTabTvBtn').className = "bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center";
+                document.getElementById('adminTabTvBtn').className = "bg-sky-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center";
                 renderAdminTvList();
             } else if(tabName === 'media') {
                 document.getElementById('adminTabMedia').classList.remove('hidden');
-                document.getElementById('adminTabMediaBtn').className = "bg-sky-600 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md flex items-center";
+                document.getElementById('adminTabMediaBtn').className = "bg-sky-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md flex items-center";
                 renderAdminMediaList();
             }
         }
 
-        // Wake Lock to prevent screen sleep during video playback
         async function requestWakeLock() {
             try {
                 if ('wakeLock' in navigator) {
@@ -607,7 +601,6 @@
             player.play().catch(e => console.log("Stream loading"));
         }
 
-        // Fullscreen Mode with Auto Header & Footer Hide
         function toggleVideoFullscreen() {
             let container = document.getElementById('liveTvModal');
             let topBar = document.getElementById('liveTvTopBar');
@@ -660,7 +653,6 @@
             }
         }
 
-        // Speed Test Gauge Meter Logic (Like Reference Image)
         function showSpeedTestModal() {
             document.getElementById('speedTestModal').classList.remove('hidden');
         }
@@ -685,7 +677,7 @@
             status.innerText = "ডাউনলোড স্পিড পরীক্ষা করা হচ্ছে...";
             
             let currentVal = 0;
-            let targetVal = 85.5; // Simulated speed in Mbps
+            let targetVal = 85.5;
             let maxDashOffset = 251.2;
             
             let interval = setInterval(() => {
@@ -775,21 +767,21 @@
             tbody.innerHTML = '';
             data.forEach((sub, index) => {
                 const badge = sub.status === 'active'
-                    ? `<span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5 rounded font-bold">active</span>`
-                    : `<span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded font-bold">suspended</span>`;
+                    ? `<span class="bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs px-2 py-0.5 rounded font-bold">active</span>`
+                    : `<span class="bg-rose-100 text-rose-700 text-[10px] sm:text-xs px-2 py-0.5 rounded font-bold">suspended</span>`;
 
                 const row = `
                     <tr class="hover:bg-sky-50/50 transition">
-                        <td class="p-3.5 font-bold text-slate-900">${sub.code}</td>
-                        <td class="p-3.5 text-slate-700">${sub.name}</td>
-                        <td class="p-3.5 text-slate-600">${sub.mobile}</td>
-                        <td class="p-3.5 text-slate-600">${sub.pppoe}</td>
-                        <td class="p-3.5 text-slate-600">${sub.package}</td>
-                        <td class="p-3.5">${badge}</td>
-                        <td class="p-3.5 text-amber-600 font-semibold">${sub.expires}</td>
-                        <td class="p-3.5 font-bold text-rose-600">৳${sub.due}</td>
-                        <td class="p-3.5"><button onclick="subscribers[${index}].due=0;saveToStorage();loadAdminTable();" class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold">Paid</button></td>
-                        <td class="p-3.5"><a href="https://wa.me/880${sub.mobile}" target="_blank" class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-lg font-bold inline-block"><i class="fa-brands fa-whatsapp"></i></a></td>
+                        <td class="p-3 font-bold text-slate-900">${sub.code}</td>
+                        <td class="p-3 text-slate-700">${sub.name}</td>
+                        <td class="p-3 text-slate-600">${sub.mobile}</td>
+                        <td class="p-3 text-slate-600">${sub.pppoe}</td>
+                        <td class="p-3 text-slate-600">${sub.package}</td>
+                        <td class="p-3">${badge}</td>
+                        <td class="p-3 text-amber-600 font-semibold">${sub.expires}</td>
+                        <td class="p-3 font-bold text-rose-600">৳${sub.due}</td>
+                        <td class="p-3"><button onclick="subscribers[${index}].due=0;saveToStorage();loadAdminTable();" class="bg-emerald-600 text-white text-[10px] sm:text-xs px-2 py-1 rounded-lg font-bold">Paid</button></td>
+                        <td class="p-3"><a href="https://wa.me/880${sub.mobile}" target="_blank" class="bg-emerald-600 text-white text-[10px] sm:text-xs px-2 py-1 rounded-lg font-bold inline-block"><i class="fa-brands fa-whatsapp"></i></a></td>
                     </tr>
                 `;
                 tbody.innerHTML += row;
