@@ -28,15 +28,10 @@
             background-color: #e0f2fe !important;
             color: #0369a1 !important;
         }
-        /* Bike Speedometer Animation CSS */
-        @keyframes needleMove {
-            0% { transform: rotate(-120deg); }
-            50% { transform: rotate(45deg); }
-            100% { transform: rotate(20deg); }
-        }
+        /* Speedometer Needle Rotation CSS */
         .speedometer-needle {
             transform-origin: bottom center;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
@@ -100,14 +95,13 @@
             </nav>
 
             <div class="flex items-center space-x-2 sm:space-x-3">
-                <!-- Notification Bell Icon (Replaced top banner) -->
+                <!-- Notification Bell Icon -->
                 <div class="relative">
                     <button onclick="toggleNotificationPopup()" class="tv-focusable bg-sky-100 hover:bg-sky-200 text-sky-700 w-10 h-10 rounded-xl flex items-center justify-center transition shadow-sm relative" title="আপডেট নোটিফিকেশন">
                         <i class="fa-solid fa-bell"></i>
                         <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping"></span>
                         <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
                     </button>
-                    <!-- Popup Box -->
                     <div id="notifPopup" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-sky-100 p-4 text-xs text-slate-700 z-50">
                         <div class="flex justify-between items-center font-bold text-slate-900 mb-2 border-b pb-1">
                             <span><i class="fa-solid fa-bullhorn text-sky-600 mr-1"></i> আপডেট নোটিফিকেশন</span>
@@ -115,7 +109,7 @@
                         </div>
                         <p>হটলাইন নম্বর: <strong>01580-441506</strong></p>
                         <p class="mt-1">ডেভেলপার: <strong class="text-sky-600">Khairul Hasan Sihab (Sihab)</strong></p>
-                        <p class="mt-1 text-slate-500">নতুন রিমোট ফ্রেন্ডলি টিভি মোড ও বাইক স্পিডোমিটার স্পিড টেস্ট যুক্ত হয়েছে।</p>
+                        <p class="mt-1 text-slate-500">স্ট্যান্ডার্ড স্পিড টেস্ট মিটার ও ফুল-স্ক্রিন লাইভ টিভি আপডেট যুক্ত হয়েছে।</p>
                     </div>
                 </div>
 
@@ -169,7 +163,7 @@
             </div>
         </div>
 
-        <!-- ADMIN PANEL VIEW (Tabbed Layout) -->
+        <!-- ADMIN PANEL VIEW -->
         <div id="adminView" class="hidden space-y-6">
             <div class="bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-sky-100 space-y-6">
                 
@@ -283,7 +277,7 @@
 
     </main>
 
-    <!-- Live TV Player Modal (With Auto Header/Footer Hide on Fullscreen) -->
+    <!-- Live TV Player Modal (Auto Header/Footer Hide on Fullscreen & Wake Lock) -->
     <div id="liveTvModal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col justify-between p-2 sm:p-4">
         <!-- Modal Top Bar -->
         <div id="liveTvTopBar" class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center text-white border border-slate-800 shadow-xl transition-all duration-300">
@@ -318,27 +312,35 @@
         </div>
     </div>
 
-    <!-- Speed Test Modal (Bike Speedometer Feature) -->
+    <!-- Speed Test Modal (Standard Gauge Meter like Ookla) -->
     <div id="speedTestModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative border border-sky-100 text-center space-y-6">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative border border-sky-100 text-center space-y-6">
             <button onclick="closeSpeedTestModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-xl font-bold text-slate-900 flex items-center justify-center"><i class="fa-solid fa-gauge-high text-sky-600 mr-2"></i> বাইক স্পিডোমিটার স্পিড টেস্ট</h3>
             
-            <!-- Bike Speedometer Gauge Design -->
-            <div class="relative w-48 h-48 mx-auto flex items-center justify-center rounded-full border-8 border-sky-100 bg-gradient-to-b from-sky-50 to-blue-100 shadow-inner">
+            <div class="flex justify-around text-xs text-slate-500 font-bold border-b pb-4">
+                <div><span class="text-sky-600 block"><i class="fa-solid fa-arrow-down"></i> DOWNLOAD</span> <span id="downSpeedText" class="text-lg text-slate-900">--</span> Mbps</div>
+                <div><span class="text-indigo-600 block"><i class="fa-solid fa-arrow-up"></i> UPLOAD</span> <span id="upSpeedText" class="text-lg text-slate-900">--</span> Mbps</div>
+                <div><span class="text-amber-600 block"><i class="fa-solid fa-stopwatch"></i> PING</span> <span id="pingText" class="text-lg text-slate-900">8</span> ms</div>
+            </div>
+
+            <!-- Gauge Meter Design (Matching Reference Image) -->
+            <div class="relative w-56 h-56 mx-auto flex items-center justify-center">
+                <!-- Circular Gauge SVG / Ring -->
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="#f1f5f9" stroke-width="8" fill="transparent" />
+                    <circle id="gaugeProgress" cx="50" cy="50" r="40" stroke="#0ea5e9" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="180" stroke-linecap="round" fill="transparent" class="transition-all duration-300" />
+                </svg>
+                
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span id="speedValue" class="text-4xl font-black text-slate-900">0</span>
-                    <span class="text-xs text-sky-600 font-bold uppercase tracking-wider">Mbps</span>
+                    <span id="speedValue" class="text-4xl font-black text-slate-900">0.00</span>
+                    <span class="text-xs text-sky-600 font-bold uppercase tracking-wider mt-1"><i class="fa-solid fa-arrow-down"></i> Mbps</span>
                 </div>
-                <!-- Needle -->
-                <div id="speedometerNeedle" class="absolute w-1.5 h-20 bg-rose-600 bottom-1/2 left-1/2 -ml-[3px] speedometer-needle rounded-full"></div>
-                <div class="absolute w-4 h-4 bg-slate-900 rounded-full z-10"></div>
             </div>
 
             <p id="speedStatus" class="text-xs text-slate-500 font-medium">টেস্ট শুরু করতে নিচের বাটনে ক্লিক করুন...</p>
 
-            <button onclick="startBikeSpeedTest()" id="startTestBtn" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-sky-600/30 text-sm">
-                <i class="fa-solid fa-play mr-2"></i> স্পিড টেস্ট শুরু করুন
+            <button onclick="startSpeedTest()" id="startTestBtn" class="tv-focusable w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-sky-600/30 text-sm">
+                <i class="fa-solid fa-play mr-2"></i> গো (Go) - স্পিড টেস্ট শুরু করুন
             </button>
         </div>
     </div>
@@ -398,7 +400,7 @@
     <script>
         let currentChannelIndex = 0;
         let currentLang = localStorage.getItem('peoples_lang') || 'bn';
-        let wakeLock = null; // Wake Lock API to prevent screen dimming/sleep
+        let wakeLock = null;
 
         const translations = {
             bn: {
@@ -452,8 +454,7 @@
         }
 
         function toggleNotificationPopup() {
-            const popup = document.getElementById('notifPopup');
-            popup.classList.toggle('hidden');
+            document.getElementById('notifPopup').classList.toggle('hidden');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -559,15 +560,13 @@
             }
         }
 
-        // Prevent screen sleep/dimming during video playback (Wake Lock API)
+        // Wake Lock to prevent screen sleep during video playback
         async function requestWakeLock() {
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
                 }
-            } catch (err) {
-                console.log(err);
-            }
+            } catch (err) { console.log(err); }
         }
 
         function releaseWakeLock() {
@@ -661,43 +660,51 @@
             }
         }
 
-        // Speed Test Modal & Bike Speedometer Logic
+        // Speed Test Gauge Meter Logic (Like Reference Image)
         function showSpeedTestModal() {
             document.getElementById('speedTestModal').classList.remove('hidden');
         }
         function closeSpeedTestModal() {
             document.getElementById('speedTestModal').classList.add('hidden');
-            document.getElementById('speedValue').innerText = '0';
-            document.getElementById('speedometerNeedle').style.transform = 'rotate(-120deg)';
+            document.getElementById('speedValue').innerText = '0.00';
+            document.getElementById('downSpeedText').innerText = '--';
+            document.getElementById('upSpeedText').innerText = '--';
+            document.getElementById('gaugeProgress').style.strokeDashoffset = '180';
             document.getElementById('speedStatus').innerText = "টেস্ট শুরু করতে নিচের বাটনে ক্লিক করুন...";
         }
 
-        function startBikeSpeedTest() {
-            let needle = document.getElementById('speedometerNeedle');
+        function startSpeedTest() {
+            let progress = document.getElementById('gaugeProgress');
             let val = document.getElementById('speedValue');
+            let downTxt = document.getElementById('downSpeedText');
+            let upTxt = document.getElementById('upSpeedText');
             let status = document.getElementById('speedStatus');
             let btn = document.getElementById('startTestBtn');
             
             btn.disabled = true;
-            status.innerText = "স্পিড পরীক্ষা করা হচ্ছে...";
+            status.innerText = "ডাউনলোড স্পিড পরীক্ষা করা হচ্ছে...";
             
-            let speeds = [15, 35, 60, 95, 120, 85, 105];
-            let angles = [-60, -20, 10, 45, 80, 30, 60];
+            let currentVal = 0;
+            let targetVal = 85.5; // Simulated speed in Mbps
+            let maxDashOffset = 251.2;
             
-            let i = 0;
             let interval = setInterval(() => {
-                if(i < speeds.length) {
-                    val.innerText = speeds[i];
-                    needle.style.transform = `rotate(${angles[i]}deg)`;
-                    i++;
+                currentVal += 3.5;
+                if(currentVal <= targetVal) {
+                    val.innerText = currentVal.toFixed(2);
+                    downTxt.innerText = currentVal.toFixed(1);
+                    let offset = maxDashOffset - (currentVal / 100) * maxDashOffset;
+                    progress.style.strokeDashoffset = offset;
                 } else {
                     clearInterval(interval);
-                    val.innerText = "98.5";
-                    needle.style.transform = `rotate(55deg)`;
-                    status.innerText = "টেস্ট সম্পন্ন! আপনার বর্তমান স্পিড চমৎকার রয়েছে।";
-                    btn.disabled = false;
+                    status.innerText = "আপলোড স্পিড পরীক্ষা করা হচ্ছে...";
+                    upTxt.innerText = "42.8";
+                    setTimeout(() => {
+                        status.innerText = "টেস্ট সম্পন্ন! আপনার ইন্টারনেট স্পিড চমৎকার রয়েছে।";
+                        btn.disabled = false;
+                    }, 1000);
                 }
-            }, 600);
+            }, 50);
         }
 
         function openAdminModal() { document.getElementById('adminLoginModal').classList.remove('hidden'); }
@@ -863,7 +870,7 @@
 
         function renderAdminMediaList() {
             let container = document.getElementById('adminMediaList');
-            container.innerHTML = ``;
+            container.innerHTML = '';
             mediaSites.forEach((m, idx) => {
                 container.innerHTML += `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-sky-200 text-xs text-slate-700"><span>${m.title}</span><button onclick="mediaSites.splice(${idx},1);saveToStorage();renderAdminMediaList();" class="text-rose-600 font-bold">ডিলিট</button></div>`;
             });
