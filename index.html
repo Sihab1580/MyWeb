@@ -16,176 +16,333 @@
 .tv-focusable:focus,.tv-focusable.focused{outline:3px solid #0284c7;transform:scale(1.02)}
 </style>
 </head>
-<body class="bg-sky-50 text-slate-800 font-sans" onkeydown="handleTVRemote(event)">
+<body id="pageBody" class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-sky-500 selection:text-white" onkeydown="handleTVRemote(event)">
 
-<header id="mainHeader" class="bg-white/90 border-b border-sky-100 sticky top-0 z-30 shadow-sm">
- <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
-  <div class="text-lg sm:text-2xl font-black text-slate-900"><i class="fa-solid fa-network-wired text-sky-600 mr-1.5"></i>PEOPLES <span class="text-xs text-sky-500 hidden sm:inline">COMMUNICATION</span></div>
-  <nav class="hidden md:flex items-center space-x-4 text-sm">
-    <a href="#" onclick="switchTab('client');return false" class="tv-focusable px-3 py-1.5 rounded-lg text-slate-600"><span data-lang="navHome">হোম</span></a>
-    <a href="#" onclick="show('packagesModal');return false" class="tv-focusable px-3 py-1.5 rounded-lg text-slate-600"><span data-lang="navPackages">প্যাকেজসমূহ</span></a>
-    <a href="#" onclick="showLiveTVModal();return false" class="tv-focusable px-3 py-1.5 rounded-lg text-sky-600 font-bold"><i class="fa-solid fa-tv mr-1"></i><span data-lang="navLiveTv">লাইভ টিভি</span></a>
-    <a href="#" onclick="showMediaModal();return false" class="tv-focusable px-3 py-1.5 rounded-lg text-slate-600"><span data-lang="navMedia">মিডিয়া ও FTP</span></a>
-    <a href="#" onclick="show('speedTestModal');return false" class="tv-focusable px-3 py-1.5 rounded-lg text-slate-600"><i class="fa-solid fa-gauge-high mr-1"></i><span data-lang="navSpeed">স্পিড টেস্ট</span></a>
+<!-- Modern Header -->
+<header id="mainHeader" class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 sticky top-0 z-30 transition-colors">
+ <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+  <div class="flex items-center space-x-3">
+   <div class="w-10 h-10 rounded-2xl bg-sky-500/10 text-sky-600 flex items-center justify-center text-xl font-bold">
+    <i class="fa-solid fa-network-wired"></i>
+   </div>
+   <div>
+    <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white block leading-none">PEOPLES</span>
+    <span class="text-[10px] font-bold tracking-widest text-sky-600 uppercase">COMMUNICATION</span>
+   </div>
+  </div>
+
+  <nav class="hidden md:flex items-center space-x-1 font-medium text-sm text-slate-600 dark:text-slate-300">
+    <a href="#" onclick="switchTab('client');return false" class="tv-focusable px-3.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-lang="navHome">হোম</a>
+    <a href="#" onclick="show('packagesModal');return false" class="tv-focusable px-3.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-lang="navPackages">প্যাকেজসমূহ</a>
+    <a href="#" onclick="showLiveTVModal();return false" class="tv-focusable px-3.5 py-2 rounded-xl text-sky-600 font-bold bg-sky-50 dark:bg-sky-950/50 transition"><i class="fa-solid fa-tv mr-1.5"></i><span data-lang="navLiveTv">লাইভ টিভি</span></a>
+    <a href="#" onclick="showMediaModal();return false" class="tv-focusable px-3.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-lang="navMedia">মিডিয়া</a>
+    <a href="#" onclick="show('speedTestModal');return false" class="tv-focusable px-3.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition"><i class="fa-solid fa-gauge-high mr-1.5"></i><span data-lang="navSpeed">স্পিড টেস্ট</span></a>
+    <a href="#" onclick="show('supportModal');return false" class="tv-focusable px-3.5 py-2 rounded-xl text-amber-600 font-bold hover:bg-amber-50 dark:hover:bg-amber-950/30 transition"><i class="fa-solid fa-headset mr-1.5"></i><span data-lang="navSupport">সাপোর্ট</span></a>
+    <a href="#" onclick="show('newConnectionModal');return false" class="tv-focusable px-3.5 py-2 rounded-xl text-emerald-600 font-bold hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition"><i class="fa-solid fa-user-plus mr-1.5"></i><span data-lang="navNewConn">নতুন সংযোগ</span></a>
   </nav>
-  <div class="flex items-center space-x-1.5 text-xs font-bold">
-    <button onclick="toggleLanguage()" class="tv-focusable bg-sky-50 text-sky-700 px-3 py-2 rounded-xl border border-sky-200"><i class="fa-solid fa-globe mr-1"></i><span id="langBtnText">EN</span></button>
-    <button onclick="show('adminLoginModal')" class="tv-focusable bg-slate-900 text-white px-3 py-2 rounded-xl"><i class="fa-solid fa-lock mr-1"></i><span data-lang="navAdmin">এডমিন</span></button>
+
+  <div class="flex items-center space-x-2">
+    <button onclick="toggleDarkMode()" class="tv-focusable bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 p-2.5 rounded-xl font-bold text-xs transition" title="Dark/Light Mode"><i id="themeIcon" class="fa-solid fa-moon"></i></button>
+    <button onclick="toggleLanguage()" class="tv-focusable bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-xl font-bold text-xs transition flex items-center">
+     <i class="fa-solid fa-globe mr-1"></i><span id="langBtnText">EN</span>
+    </button>
+    <button onclick="show('adminLoginModal')" class="tv-focusable bg-slate-900 dark:bg-slate-700 text-white px-4 py-2 rounded-xl font-semibold text-xs transition shadow-sm flex items-center">
+     <i class="fa-solid fa-lock mr-1.5"></i><span data-lang="navAdmin">এডমিন</span>
+    </button>
   </div>
  </div>
 </header>
 
-<div id="heroSection" class="max-w-7xl mx-auto px-3 mt-4">
- <div class="rounded-2xl bg-gradient-to-r from-sky-600 to-blue-700 text-white p-5 sm:p-12 shadow-xl">
-  <h1 class="text-xl sm:text-5xl font-black mb-2" data-lang="heroTitle">উচ্চগতির ফাইবার অপটিক ব্রডব্যান্ড</h1>
-  <p class="text-sky-100 text-xs sm:text-base max-w-2xl" data-lang="heroDesc">প্যাকেজ, মেয়াদ, লাইভ টিভি এবং চলতি বকেয়া বিল এক ক্লিকে যাচাই করুন।</p>
+<!-- Notice Board Ticker -->
+<div id="noticeBoardBanner" class="bg-amber-500 text-slate-950 text-xs font-bold py-2 px-4 overflow-hidden whitespace-nowrap shadow-inner flex items-center">
+ <span class="bg-slate-950 text-amber-400 px-2 py-0.5 rounded mr-3 uppercase tracking-wider text-[10px] shrink-0" data-lang="noticeBadge">নোটিশ</span>
+ <marquee scrollamount="5" id="noticeTextContent">স্বাগতম পিপলস কমিউনিকেশন ব্রডব্যান্ড ইন্টারনেটে। যেকোনো প্রয়োজনে আমাদের হটলাইনে যোগাযোগ করুন।</marquee>
+</div>
+
+<!-- Modern Hero Section -->
+<div id="heroSection" class="max-w-7xl mx-auto px-4 mt-6">
+ <div class="rounded-3xl bg-gradient-to-br from-sky-600 via-sky-700 to-blue-800 text-white p-8 sm:p-12 shadow-xl shadow-sky-600/10 relative overflow-hidden">
+  <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+  <div class="relative z-10 max-w-2xl space-y-3">
+   <span class="bg-white/20 backdrop-blur-md text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block" data-lang="heroBadge">হাই-স্পিড ব্রডব্যান্ড সার্ভিস</span>
+   <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight" data-lang="heroTitle">উচ্চগতির ফাইবার অপটিক ব্রডব্যান্ড</h1>
+   <p class="text-sky-100 text-xs sm:text-sm font-normal leading-relaxed" data-lang="heroDesc">প্যাকেজ, মেয়াদ, লাইভ টিভি এবং চলতি বকেয়া বিল এক ক্লিকে যাচাই করুন খুব সহজেই।</p>
+  </div>
  </div>
 </div>
 
-<main class="max-w-7xl mx-auto px-3 my-6">
- <div id="clientView" class="space-y-4">
+<main class="max-w-7xl mx-auto px-4 my-8">
+ <div id="clientView" class="space-y-6">
   
-  <!-- ফাস্ট এক্সেস মেনু (এখন সব ডিভাইসে তথা বড় স্ক্রিন ও মোবাইলে সবসময় শো করবে) -->
-  <div class="max-w-2xl mx-auto grid grid-cols-4 gap-2 text-[11px] font-bold text-center">
-    <button onclick="show('packagesModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-box block text-sky-600 text-lg mb-1"></i>প্যাকেজ</button>
-    <button onclick="showLiveTVModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-tv block text-sky-600 text-lg mb-1"></i>লাইভ টিভি</button>
-    <button onclick="showMediaModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-film block text-sky-600 text-lg mb-1"></i>মিডিয়া</button>
-    <button onclick="show('speedTestModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-gauge-high block text-sky-600 text-lg mb-1"></i>স্পিড</button>
+  <!-- Modern Quick Access Menu -->
+  <div class="max-w-4xl mx-auto grid grid-cols-3 sm:grid-cols-6 gap-3 text-xs font-bold text-center">
+    <button onclick="show('packagesModal')" class="tv-focusable bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs hover:shadow-md transition group">
+     <div class="w-10 h-10 mx-auto rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-600 flex items-center justify-center text-base mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-box"></i></div>
+     <span class="text-slate-700 dark:text-slate-200" data-lang="menuPkg">প্যাকেজ</span>
+    </button>
+    <button onclick="showLiveTVModal()" class="tv-focusable bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs hover:shadow-md transition group">
+     <div class="w-10 h-10 mx-auto rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-600 flex items-center justify-center text-base mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-tv"></i></div>
+     <span class="text-slate-700 dark:text-slate-200" data-lang="menuTv">লাইভ টিভি</span>
+    </button>
+    <button onclick="showMediaModal()" class="tv-focusable bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs hover:shadow-md transition group">
+     <div class="w-10 h-10 mx-auto rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-600 flex items-center justify-center text-base mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-film"></i></div>
+     <span class="text-slate-700 dark:text-slate-200" data-lang="menuMedia">মিডিয়া</span>
+    </button>
+    <button onclick="show('speedTestModal')" class="tv-focusable bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs hover:shadow-md transition group">
+     <div class="w-10 h-10 mx-auto rounded-xl bg-sky-50 dark:bg-sky-950/50 text-sky-600 flex items-center justify-center text-base mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-gauge-high"></i></div>
+     <span class="text-slate-700 dark:text-slate-200" data-lang="menuSpeed">স্পিড টেস্ট</span>
+    </button>
+    <button onclick="show('supportModal')" class="tv-focusable bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-4 shadow-xs hover:shadow-md transition group text-amber-700 dark:text-amber-400">
+     <div class="w-10 h-10 mx-auto rounded-xl bg-white dark:bg-slate-900 text-amber-600 flex items-center justify-center text-base mb-2 group-hover:scale-110 transition shadow-xs"><i class="fa-solid fa-headset"></i></div>
+     <span data-lang="menuSupport">কমপ্লেইন</span>
+    </button>
+    <button onclick="show('newConnectionModal')" class="tv-focusable bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl p-4 shadow-xs hover:shadow-md transition group text-emerald-700 dark:text-emerald-400">
+     <div class="w-10 h-10 mx-auto rounded-xl bg-white dark:bg-slate-900 text-emerald-600 flex items-center justify-center text-base mb-2 group-hover:scale-110 transition shadow-xs"><i class="fa-solid fa-user-plus"></i></div>
+     <span data-lang="menuNewLine">নতুন লাইন</span>
+    </button>
   </div>
 
-  <div class="bg-white rounded-2xl shadow-xl p-5 sm:p-10 max-w-2xl mx-auto border border-sky-100">
-   <div class="text-center mb-5">
-    <h2 class="text-xl sm:text-2xl font-black" data-lang="selfCareTitle">গ্রাহক সেলফ কেয়ার পোর্টাল</h2>
-    <p class="text-xs text-slate-500 mt-1" data-lang="selfCareSub">মোবাইল নম্বর দিয়ে বর্তমান বিল ও প্যাকেজ দেখুন</p>
+  <!-- Modern Self Care Search Card -->
+  <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-6 sm:p-10 max-w-2xl mx-auto border border-slate-100 dark:border-slate-800">
+   <div class="text-center mb-6 space-y-1">
+    <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white" data-lang="selfCareTitle">গ্রাহক সেলফ কেয়ার পোর্টাল</h2>
+    <p class="text-xs text-slate-500 dark:text-slate-400" data-lang="selfCareSub">মোবাইল নম্বর দিয়ে বর্তমান বিল ও প্যাকেজ দেখুন</p>
    </div>
    <div class="flex flex-col sm:flex-row gap-3">
-    <input type="tel" id="clientSearchInput" inputmode="numeric" placeholder="01XXXXXXXXX" onkeydown="if(event.key==='Enter')searchClient()" class="tv-focusable flex-1 px-4 py-3 bg-sky-50/50 border border-sky-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sky-500">
-    <button onclick="searchClient()" class="tv-focusable bg-sky-600 text-white font-bold px-5 py-3 rounded-2xl text-sm"><i class="fa-solid fa-search mr-2"></i><span data-lang="btnSearch">খুঁজুন</span></button>
+    <div class="relative flex-1">
+     <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400"><i class="fa-solid fa-phone"></i></span>
+     <input type="tel" id="clientSearchInput" inputmode="numeric" placeholder="01XXXXXXXXX" onkeydown="if(event.key==='Enter')searchClient()" class="tv-focusable w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition">
+    </div>
+    <button onclick="searchClient()" class="tv-focusable bg-sky-600 hover:bg-sky-700 text-white font-bold px-6 py-3.5 rounded-2xl text-sm transition shadow-lg shadow-sky-600/20 flex items-center justify-center">
+     <i class="fa-solid fa-search mr-2"></i><span data-lang="btnSearch">খুঁজুন</span>
+    </button>
    </div>
-   <div id="clientResult" class="mt-5 hidden"></div>
+   <div id="clientResult" class="mt-6 hidden"></div>
   </div>
  </div>
 
- <!-- ADMIN -->
- <div id="adminView" class="hidden bg-white rounded-2xl shadow-xl p-4 sm:p-8 border border-sky-100 space-y-5 overflow-hidden">
-  <div class="flex flex-wrap gap-2 border-b border-sky-100 pb-4">
-    <button onclick="switchAdminTab('subscribers')" data-atab="subscribers" class="text-xs font-bold px-4 py-2.5 rounded-xl"><i class="fa-solid fa-users mr-2"></i>গ্রাহক বিল</button>
-    <button onclick="switchAdminTab('livetv')" data-atab="livetv" class="text-xs font-bold px-4 py-2.5 rounded-xl"><i class="fa-solid fa-tv mr-2"></i>লাইভ টিভি</button>
-    <button onclick="switchAdminTab('media')" data-atab="media" class="text-xs font-bold px-4 py-2.5 rounded-xl"><i class="fa-solid fa-film mr-2"></i>মিডিয়া সাইট</button>
-    <button onclick="switchTab('client')" class="ml-auto text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-200">লগআউট</button>
+ <!-- ADMIN PANEL -->
+ <div id="adminView" class="hidden bg-white dark:bg-slate-900 rounded-3xl shadow-xl p-6 sm:p-8 border border-slate-100 dark:border-slate-800 space-y-6">
+  <div class="flex flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+    <button onclick="switchAdminTab('subscribers')" data-atab="subscribers" class="text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-users mr-2"></i>গ্রাহক বিল</button>
+    <button onclick="switchAdminTab('requests')" data-atab="requests" class="text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-user-clock mr-2"></i>নতুন আবেদন (<span id="reqCount">0</span>)</button>
+    <button onclick="switchAdminTab('tickets')" data-atab="tickets" class="text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-ticket mr-2"></i>সাপোর্ট টিকিট (<span id="ticketCount">0</span>)</button>
+    <button onclick="switchAdminTab('notices')" data-atab="notices" class="text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-bullhorn mr-2"></i>নোটিশ বোর্ড</button>
+    <button onclick="switchAdminTab('livetv')" data-atab="livetv" class="text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-tv mr-2"></i>লাইভ টিভি</button>
+    <button onclick="switchAdminTab('media')" data-atab="media" class="text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-film mr-2"></i>মিডিয়া সাইট</button>
+    <button onclick="switchTab('client')" class="ml-auto text-xs font-bold px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 transition">লগআউট</button>
   </div>
 
+  <!-- Subscribers Tab -->
   <div id="adminTabSubscribers" class="space-y-4">
-   <div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 space-y-3">
-    <div><h3 class="font-bold text-sm">গ্রাহক CSV আপলোড</h3><p class="text-xs text-slate-500">কলাম: Code, Name, Mobile, PPPoE, Zone, Package, Status, Expires, Due।</p></div>
+   <div class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700 space-y-3">
+    <div><h3 class="font-bold text-sm text-slate-900 dark:text-white">গ্রাহক CSV আপলোড</h3><p class="text-xs text-slate-500 dark:text-slate-400">কলাম: Code, Name, Mobile, PPPoE, Zone, Package, Status, Expires, Due।</p></div>
     <div class="flex flex-wrap items-center gap-3">
-     <input type="file" id="csvFileInput" accept=".csv" class="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-sky-600 file:text-white file:font-bold">
-     <button onclick="uploadCsv()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>আপলোড</button>
-     <button onclick="resetSubs()" class="bg-rose-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl ml-auto"><i class="fa-solid fa-trash mr-1"></i>সব ডাটা রিসেট</button>
+     <input type="file" id="csvFileInput" accept=".csv" class="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-sky-600 file:text-white file:font-bold cursor-pointer">
+     <button onclick="uploadCsv()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-cloud-arrow-up mr-1.5"></i>আপলোড</button>
+     <button onclick="resetSubs()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl ml-auto transition"><i class="fa-solid fa-trash mr-1.5"></i>সব ডাটা রিসেট</button>
     </div>
-    <p class="text-xs text-slate-600">মোট গ্রাহক: <b id="subCount">0</b></p>
+    <p class="text-xs text-slate-600 dark:text-slate-300">মোট গ্রাহক: <b id="subCount">0</b></p>
    </div>
-   <div class="overflow-x-auto rounded-2xl border border-sky-100">
+   <div class="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800">
     <table class="w-full text-left text-xs sm:text-sm min-w-[700px]">
-     <thead class="bg-sky-100/60 text-slate-700 border-b border-sky-200"><tr>
+     <thead class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700"><tr>
       <th class="p-3">Code</th><th class="p-3">Name</th><th class="p-3">Mobile</th><th class="p-3">Package</th><th class="p-3">Status</th><th class="p-3">Expires</th><th class="p-3">Due</th><th class="p-3">Action</th><th class="p-3">WA</th></tr></thead>
-     <tbody id="adminTableBody" class="divide-y divide-sky-100"></tbody>
+     <tbody id="adminTableBody" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
     </table>
    </div>
   </div>
 
+  <!-- Requests Tab -->
+  <div id="adminTabRequests" class="hidden space-y-4">
+   <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">নতুন সংযোগের আবেদনসমূহ:</h3>
+   <div class="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800">
+    <table class="w-full text-left text-xs sm:text-sm min-w-[600px]">
+     <thead class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700"><tr>
+      <th class="p-3">তারিখ</th><th class="p-3">নাম</th><th class="p-3">মোবাইল</th><th class="p-3">ঠিকানা</th><th class="p-3">প্যাকেজ</th><th class="p-3">অ্যাকশন</th></tr></thead>
+     <tbody id="adminReqTableBody" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+    </table>
+   </div>
+  </div>
+
+  <!-- Tickets Tab -->
+  <div id="adminTabTickets" class="hidden space-y-4">
+   <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">গ্রাহক কমপ্লেইন ও সাপোর্ট টিকিট:</h3>
+   <div class="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-800">
+    <table class="w-full text-left text-xs sm:text-sm min-w-[600px]">
+     <thead class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-b border-slate-100 dark:border-slate-700"><tr>
+      <th class="p-3">তারিখ</th><th class="p-3">আইডি/নাম</th><th class="p-3">মোবাইল</th><th class="p-3">সমস্যার বিবরণ</th><th class="p-3">স্ট্যাটাস</th><th class="p-3">অ্যাকশন</th></tr></thead>
+     <tbody id="adminTicketTableBody" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+    </table>
+   </div>
+  </div>
+
+  <!-- Notices Tab -->
+  <div id="adminTabNotices" class="hidden max-w-xl mx-auto space-y-4">
+   <div class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700 space-y-3">
+    <h3 class="font-bold text-sm text-slate-900 dark:text-white">নোটিশ বোর্ড আপডেট করুন</h3>
+    <textarea id="adminNoticeInput" rows="3" placeholder="হোম পেজে দেখানোর জন্য নোটিশ লিখুন..." class="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-sky-500 text-slate-900 dark:text-white"></textarea>
+    <button onclick="updateNoticeBoard()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3 rounded-xl transition">নোটিশ পাবলিশ করুন</button>
+   </div>
+  </div>
+
+  <!-- Live TV Tab -->
   <div id="adminTabLivetv" class="hidden max-w-2xl mx-auto space-y-4">
-   <div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 space-y-3">
-    <h3 class="font-bold text-sm"><i class="fa-solid fa-file-audio text-sky-600 mr-2"></i>M3U/M3U8 প্লেলিস্ট আপলোড</h3>
+   <div class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700 space-y-3">
+    <h3 class="font-bold text-sm text-slate-900 dark:text-white"><i class="fa-solid fa-file-audio text-sky-600 mr-2"></i>M3U/M3U8 প্লেলিস্ট আপলোড</h3>
     <div class="flex flex-wrap items-center gap-3">
-     <input type="file" id="m3uFileInput" accept=".m3u,.m3u8,.txt" class="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-sky-600 file:text-white file:font-bold">
-     <button onclick="importM3u()" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2.5 rounded-xl">চ্যানেল ইমপোর্ট</button>
+     <input type="file" id="m3uFileInput" accept=".m3u,.m3u8,.txt" class="text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-sky-600 file:text-white file:font-bold cursor-pointer">
+     <button onclick="importM3u()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition">চ্যানেল ইমপোর্ট</button>
     </div>
    </div>
-   <div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 space-y-3">
-    <h3 class="font-bold text-sm">একটা চ্যানেল যুক্ত করুন</h3>
-    <input id="newTvTitle" placeholder="চ্যানেলের নাম" class="w-full p-3 bg-white border border-sky-200 rounded-xl text-sm">
-    <input id="newTvUrl" placeholder="M3U8 স্ট্রিম লিংক" class="w-full p-3 bg-white border border-sky-200 rounded-xl text-sm">
-    <button onclick="addLiveTV()" class="w-full bg-sky-600 text-white text-xs font-bold py-3 rounded-xl">সেভ করুন</button>
+   <div class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700 space-y-3">
+    <h3 class="font-bold text-sm text-slate-900 dark:text-white">একটা চ্যানেল যুক্ত করুন</h3>
+    <input id="newTvTitle" placeholder="চ্যানেলের নাম" class="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-sky-500 text-slate-900 dark:text-white">
+    <input id="newTvUrl" placeholder="M3U8 স্ট্রিম লিংক" class="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-sky-500 text-slate-900 dark:text-white">
+    <button onclick="addLiveTV()" class="w-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-3 rounded-xl transition">সেভ করুন</button>
    </div>
-   <h4 class="font-bold text-sm">বর্তমান চ্যানেল (<span id="tvCount">0</span>):</h4>
+   <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200">বর্তমান চ্যানেল (<span id="tvCount">0</span>):</h4>
    <div id="adminTvList" class="space-y-2 max-h-72 overflow-y-auto"></div>
   </div>
 
+  <!-- Media Tab -->
   <div id="adminTabMedia" class="hidden max-w-2xl mx-auto space-y-4">
-   <div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 space-y-3">
-    <h3 class="font-bold text-sm">মিডিয়া ও FTP সাইট যুক্ত করুন</h3>
-    <input id="newMediaTitle" placeholder="সাইটের নাম" class="w-full p-3 bg-white border border-sky-200 rounded-xl text-sm">
-    <input id="newMediaUrl" placeholder="লিংক" class="w-full p-3 bg-white border border-sky-200 rounded-xl text-sm">
-    <button onclick="addMediaSite()" class="w-full bg-blue-600 text-white text-xs font-bold py-3 rounded-xl">সেভ করুন</button>
+   <div class="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700 space-y-3">
+    <h3 class="font-bold text-sm text-slate-900 dark:text-white">মিডিয়া ও FTP সাইট যুক্ত করুন</h3>
+    <input id="newMediaTitle" placeholder="সাইটের নাম" class="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-sky-500 text-slate-900 dark:text-white">
+    <input id="newMediaUrl" placeholder="লিংক" class="w-full p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:border-sky-500 text-slate-900 dark:text-white">
+    <button onclick="addMediaSite()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 rounded-xl transition">সেভ করুন</button>
    </div>
    <div id="adminMediaList" class="space-y-2 max-h-72 overflow-y-auto"></div>
   </div>
  </div>
 </main>
 
-<!-- Live TV Modal -->
-<div id="liveTvModal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col justify-between p-2 sm:p-4">
- <div class="bg-slate-900 rounded-2xl p-3 flex justify-between items-center text-white border border-slate-800">
-  <h3 class="text-xs sm:text-lg font-bold truncate"><i class="fa-solid fa-tv text-sky-500 mr-2"></i><span id="currentPlayingTitle">লাইভ টিভি</span></h3>
-  <div class="flex items-center space-x-1.5 shrink-0">
-   <button onclick="toggleVideoFullscreen()" class="tv-focusable bg-sky-600 text-xs font-bold px-3 py-2 rounded-xl">ফুল স্ক্রিন</button>
-   <button id="tvClose" onclick="closeLiveTVModal()" aria-label="বন্ধ করুন" class="tv-focusable text-slate-400 text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
+<!-- Support Ticket Modal -->
+<div id="supportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative space-y-4">
+  <button onclick="hide('supportModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <h3 class="text-xl font-black text-slate-900 dark:text-white text-center"><i class="fa-solid fa-headset text-amber-500 mr-2"></i>কমপ্লেইন বা সাপোর্ট টিকিট</h3>
+  <div class="space-y-3.5 text-sm">
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">গ্রাহকের নাম / ইউজার আইডি *</label><input type="text" id="supName" placeholder="নাম বা কোড দিন" class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition"></div>
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">মোবাইল নম্বর *</label><input type="tel" id="supMobile" placeholder="01XXXXXXXXX" class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition"></div>
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">সমস্যার বিবরণ *</label><textarea id="supIssue" rows="3" placeholder="ইন্টারনেট স্লো, লাইন কাটা ইত্যাদি বিস্তারিত লিখুন..." class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition"></textarea></div>
+   <button onclick="submitSupportTicket()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 rounded-2xl transition shadow-lg">টিকিট জমা দিন</button>
   </div>
  </div>
- <div class="my-auto bg-black rounded-2xl overflow-hidden aspect-video border border-slate-800 w-full max-w-5xl mx-auto">
+</div>
+
+<!-- Package Upgrade Modal -->
+<div id="upgradeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative space-y-4">
+  <button onclick="hide('upgradeModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <h3 class="text-xl font-black text-slate-900 dark:text-white text-center"><i class="fa-solid fa-arrow-up-right-dots text-sky-500 mr-2"></i>প্যাকেজ আপগ্রেড রিকোয়েস্ট</h3>
+  <div class="space-y-3.5 text-sm">
+   <input type="hidden" id="upgClientMobile">
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">বর্তমান প্যাকেজ</label><input type="text" id="upgCurrentPkg" readonly class="w-full p-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-700 dark:text-slate-300"></div>
+   <div>
+    <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">নতুন কাঙ্ক্ষিত প্যাকেজ নির্বাচন করুন *</label>
+    <select id="upgTargetPkg" class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none">
+     <option value="DURONTO_20Mbps">DURONTO_20Mbps (৳500)</option>
+     <option value="AGAMI_30Mbps">AGAMI_30Mbps (৳800)</option>
+     <option value="BIJOY_40Mbps">BIJOY_40Mbps (৳1,000)</option>
+     <option value="BLAZE_50Mbps">BLAZE_50Mbps (৳1,200)</option>
+     <option value="TURBO_60Mbps">TURBO_60Mbps (৳1,500)</option>
+     <option value="INFINITY_100Mbps">INFINITY_100Mbps (৳2,000)</option>
+    </select>
+   </div>
+   <button onclick="submitUpgradeRequest()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 rounded-2xl transition shadow-lg">আপগ্রেড রিকোয়েস্ট পাঠান</button>
+  </div>
+ </div>
+</div>
+
+<!-- New Connection Request Modal -->
+<div id="newConnectionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative space-y-4">
+  <button onclick="hide('newConnectionModal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <h3 class="text-xl font-black text-slate-900 dark:text-white text-center"><i class="fa-solid fa-user-plus text-emerald-600 mr-2"></i>নতুন ইন্টারনেট সংযোগের আবেদন</h3>
+  <div class="space-y-3.5 text-sm">
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">আপনার নাম *</label><input type="text" id="reqName" placeholder="পূর্ণ নাম লিখুন" class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition"></div>
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">মোবাইল নম্বর *</label><input type="tel" id="reqMobile" placeholder="01XXXXXXXXX" class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition"></div>
+   <div><label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">পূর্ণ ঠিকানা ও এলাকা *</label><textarea id="reqAddress" rows="2" placeholder="বাসা/রোড/এলাকা..." class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition"></textarea></div>
+   <div>
+    <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">প্যাকেজ পছন্দ করুন *</label>
+    <select id="reqPackage" class="w-full p-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white focus:outline-none transition">
+     <option value="DURONTO_20Mbps">DURONTO_20Mbps (৳500)</option>
+     <option value="AGAMI_30Mbps">AGAMI_30Mbps (৳800)</option>
+     <option value="BIJOY_40Mbps">BIJOY_40Mbps (৳1,000)</option>
+     <option value="BLAZE_50Mbps">BLAZE_50Mbps (৳1,200)</option>
+     <option value="TURBO_60Mbps">TURBO_60Mbps (৳1,500)</option>
+     <option value="INFINITY_100Mbps">INFINITY_100Mbps (৳2,000)</option>
+    </select>
+   </div>
+   <button onclick="submitNewConnection()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl transition shadow-lg shadow-emerald-600/20">আবেদন জমা দিন ও WhatsApp এ পাঠান</button>
+  </div>
+ </div>
+</div>
+
+<!-- Live TV Modal -->
+<div id="liveTvModal" class="fixed inset-0 bg-slate-950 z-50 hidden flex flex-col justify-between p-2 sm:p-4">
+ <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 flex justify-between items-center text-white border border-slate-800">
+  <h3 class="text-xs sm:text-lg font-bold truncate"><i class="fa-solid fa-tv text-sky-500 mr-2"></i><span id="currentPlayingTitle">লাইভ টিভি</span></h3>
+  <div class="flex items-center space-x-2 shrink-0">
+   <button onclick="toggleVideoFullscreen()" class="tv-focusable bg-sky-600 hover:bg-sky-500 text-xs font-bold px-3.5 py-2 rounded-xl transition">ফুল স্ক্রিন</button>
+   <button id="tvClose" onclick="closeLiveTVModal()" aria-label="বন্ধ করুন" class="tv-focusable text-slate-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+ </div>
+ <div class="my-auto bg-black rounded-2xl overflow-hidden aspect-video border border-slate-800 w-full max-w-5xl mx-auto shadow-2xl">
   <video id="exoPlayer" controls autoplay playsinline class="w-full h-full object-contain"></video>
  </div>
- <div class="bg-slate-900 rounded-2xl p-3 border border-slate-800 max-w-5xl mx-auto w-full">
+ <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 border border-slate-800 max-w-5xl mx-auto w-full">
   <div class="text-xs text-slate-400 mb-2 font-semibold">চ্যানেল লিস্ট:</div>
   <div id="clientTvList" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2 overflow-y-auto max-h-28"></div>
  </div>
 </div>
 
 <!-- Speed test -->
-<div id="speedTestModal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
- <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative text-center space-y-5">
-  <button onclick="hide('speedTestModal')" aria-label="বন্ধ করুন" class="absolute top-4 right-4 text-slate-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
-  <div class="text-xs text-slate-500 font-bold">DOWNLOAD <span id="downSpeedText" class="text-lg text-slate-900 ml-1">--</span> Mbps</div>
+<div id="speedTestModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-8 shadow-2xl relative text-center space-y-6">
+  <button onclick="hide('speedTestModal')" aria-label="বন্ধ করুন" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <div class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">DOWNLOAD <span id="downSpeedText" class="text-lg text-slate-900 dark:text-white ml-1">--</span> Mbps</div>
   <div class="relative w-48 h-48 mx-auto flex items-center justify-center">
    <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="#f1f5f9" stroke-width="8" fill="none"/><circle id="gaugeProgress" cx="50" cy="50" r="40" stroke="#0ea5e9" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" fill="none" style="transition:stroke-dashoffset .2s"/></svg>
-   <div class="absolute inset-0 flex flex-col items-center justify-center"><span id="speedValue" class="text-3xl font-black">0.00</span><span class="text-xs text-sky-600 font-bold">Mbps</span></div>
+   <div class="absolute inset-0 flex flex-col items-center justify-center"><span id="speedValue" class="text-3xl font-black text-slate-900 dark:text-white">0.00</span><span class="text-xs text-sky-600 font-bold uppercase tracking-wider mt-1">Mbps</span></div>
   </div>
-  <button onclick="startSpeedTest()" id="startTestBtn" class="tv-focusable w-full bg-sky-600 text-white font-bold py-3.5 rounded-2xl text-sm">স্পিড টেস্ট শুরু করুন</button>
+  <button onclick="startSpeedTest()" id="startTestBtn" class="tv-focusable w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-4 rounded-2xl text-sm transition shadow-lg shadow-sky-600/20">স্পিড টেস্ট শুরু করুন</button>
  </div>
 </div>
 
 <!-- Media -->
-<div id="mediaModal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
- <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative">
-  <button onclick="hide('mediaModal')" aria-label="বন্ধ করুন" class="absolute top-4 right-4 text-slate-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
-  <h3 class="text-lg font-bold">মুভি ও মিডিয়া সাইটসমূহ</h3>
-  <div id="clientMediaList" class="space-y-2 max-h-[50vh] overflow-y-auto mt-4"></div>
+<div id="mediaModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+  <button onclick="hide('mediaModal')" aria-label="বন্ধ করুন" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">মুভি ও মিডিয়া সাইটসমূহ</h3>
+  <div id="clientMediaList" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
  </div>
 </div>
 
 <!-- Admin login -->
-<div id="adminLoginModal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
- <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
-  <button onclick="hide('adminLoginModal')" aria-label="বন্ধ করুন" class="absolute top-4 right-4 text-slate-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
-  <h3 class="text-xl font-bold text-center mb-4">এডমিন ভেরিফিকেশন</h3>
-  <input type="password" id="adminPasswordInput" placeholder="পাসওয়ার্ড" onkeydown="if(event.key==='Enter')verifyAdmin()" class="w-full px-4 py-3 bg-sky-50 border border-sky-200 rounded-xl text-sm mb-3">
-  <button onclick="verifyAdmin()" class="w-full bg-sky-600 text-white font-bold py-3 rounded-xl text-sm">প্রবেশ করুন</button>
+<div id="adminLoginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl relative space-y-4">
+  <button onclick="hide('adminLoginModal')" aria-label="বন্ধ করুন" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <h3 class="text-xl font-bold text-slate-900 dark:text-white text-center">এডমিন ভেরিফিকেশন</h3>
+  <input type="password" id="adminPasswordInput" placeholder="পাসওয়ার্ড লিখুন" onkeydown="if(event.key==='Enter')verifyAdmin()" class="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm text-slate-900 dark:text-white focus:outline-none focus:border-sky-500 transition">
+  <button onclick="verifyAdmin()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3.5 rounded-2xl text-sm transition shadow-lg shadow-sky-600/20">প্রবেশ করুন</button>
  </div>
 </div>
 
 <!-- Packages -->
-<div id="packagesModal" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center p-4">
- <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative">
-  <button onclick="hide('packagesModal')" aria-label="বন্ধ করুন" class="absolute top-4 right-4 text-slate-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
-  <h3 class="text-xl font-bold mb-4">Internet Packages</h3>
-  <div id="packagesList" class="space-y-3 max-h-[60vh] overflow-y-auto"></div>
+<div id="packagesModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+ <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative">
+  <button onclick="hide('packagesModal')" aria-label="বন্ধ করুন" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+  <h3 class="text-xl font-black text-slate-900 dark:text-white mb-4">Internet Packages</h3>
+  <div id="packagesList" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1"></div>
  </div>
 </div>
 
-<a id="whatsappBtn" href="https://wa.me/8801580441506" target="_blank" rel="noopener" aria-label="WhatsApp" class="fixed bottom-6 right-6 bg-emerald-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-30 text-2xl"><i class="fa-brands fa-whatsapp"></i></a>
+<a id="whatsappBtn" href="https://wa.me/8801580441506" target="_blank" rel="noopener" aria-label="WhatsApp" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/30 transition hover:scale-105 z-30 text-2xl"><i class="fa-brands fa-whatsapp"></i></a>
 
-<footer id="mainFooter" class="bg-white border-t border-sky-100 mt-12 py-6 text-center text-slate-500 text-xs">
+<footer id="mainFooter" class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 mt-16 py-6 text-center text-slate-500 dark:text-slate-400 text-xs shadow-xs">
  &copy; 2026 Peoples Communication. Developed by <b class="text-sky-600">Khairul Hasan Sihab</b>. Hotline: <b>01580-441506</b>
 </footer>
 
@@ -208,47 +365,215 @@ const normMobile = v => {
  return d.length === 10 ? '0' + d : '';
 };
 
-let liveTvChannels = [], mediaSites = [], subs = [], currentChannelIndex = 0, hls = null;
+let liveTvChannels = [], mediaSites = [], subs = [], reqs = [], tickets = [], currentChannelIndex = 0, hls = null;
 let currentLang = localStorage.getItem('peoples_lang') || 'bn';
-const PACKAGES = [['DURONTO_20Mbps',20,500],['AGAMI_30Mbps',30,800],['BIJOY_40Mbps',40,1000],['BLAZE_50Mbps',50,1200],['TURBO_60Mbps',60,1500],['INFINITY_100Mbps',100,2000]];
-$('packagesList').innerHTML = PACKAGES.map(p => `<div class="p-4 bg-sky-50/50 border border-sky-200 rounded-2xl flex justify-between items-center text-sm"><div><h4 class="font-bold text-sky-700">${p[0]}</h4><p class="text-xs text-slate-500">${p[1]} Mbps · 30 days</p></div><span class="font-black">৳${p[2].toLocaleString('en-US')}</span></div>`).join('');
+let isDarkMode = localStorage.getItem('peoples_dark') === 'true';
 
-/* ---------- Language ---------- */
-const EN = {navHome:'Home',navPackages:'Packages',navLiveTv:'Live TV',navMedia:'Media & FTP',navSpeed:'Speed Test',navAdmin:'Admin',
- heroTitle:'High-speed Fiber Optic Broadband',heroDesc:'Check your package, expiry, live TV and current due bill in one click.',
- selfCareTitle:'Customer Self Care',selfCareSub:'Enter your mobile number to see your bill and package',btnSearch:'Search'};
+if (isDarkMode) { document.documentElement.classList.add('dark'); $('themeIcon').className = 'fa-solid fa-sun'; }
+
+function toggleDarkMode() {
+ isDarkMode = !isDarkMode;
+ localStorage.setItem('peoples_dark', isDarkMode);
+ if (isDarkMode) {
+  document.documentElement.classList.add('dark');
+  $('themeIcon').className = 'fa-solid fa-sun';
+ } else {
+  document.documentElement.classList.remove('dark');
+  $('themeIcon').className = 'fa-solid fa-moon';
+ }
+}
+
+const PACKAGES = [['DURONTO_20Mbps',20,500],['AGAMI_30Mbps',30,800],['BIJOY_40Mbps',40,1000],['BLAZE_50Mbps',50,1200],['TURBO_60Mbps',60,1500],['INFINITY_100Mbps',100,2000]];
+$('packagesList').innerHTML = PACKAGES.map(p => `<div class="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 rounded-2xl flex justify-between items-center text-sm"><div><h4 class="font-bold text-sky-700 dark:text-sky-400">${p[0]}</h4><p class="text-xs text-slate-500 dark:text-slate-400">${p[1]} Mbps · 30 days</p></div><span class="font-black text-slate-900 dark:text-white">৳${p[2].toLocaleString('en-US')}</span></div>`).join('');
+
+/* ---------- Language Translations ---------- */
+const LANG_DATA = {
+ bn: {
+  navHome: 'হোম',
+  navPackages: 'প্যাকেজসমূহ',
+  navLiveTv: 'লাইভ টিভি',
+  navMedia: 'মিডিয়া ও FTP',
+  navSpeed: 'স্পিড টেস্ট',
+  navSupport: 'সাপোর্ট',
+  navNewConn: 'নতুন সংযোগ',
+  navAdmin: 'এডমিন',
+  noticeBadge: 'নোটিশ',
+  heroBadge: 'হাই-স্পিড ব্রডব্যান্ড সার্ভিস',
+  heroTitle: 'উচ্চগতির ফাইবার অপটিক ব্রডব্যান্ড',
+  heroDesc: 'প্যাকেজ, মেয়াদ, লাইভ টিভি এবং চলতি বকেয়া বিল এক ক্লিকে যাচাই করুন খুব সহজেই।',
+  menuPkg: 'প্যাকেজ',
+  menuTv: 'লাইভ টিভি',
+  menuMedia: 'মিডিয়া',
+  menuSpeed: 'স্পিড টেস্ট',
+  menuSupport: 'কমপ্লেইন',
+  menuNewLine: 'নতুন লাইন',
+  selfCareTitle: 'গ্রাহক সেলফ কেয়ার পোর্টাল',
+  selfCareSub: 'মোবাইল নম্বর দিয়ে বর্তমান বিল ও প্যাকেজ দেখুন',
+  btnSearch: 'খুঁজুন'
+ },
+ en: {
+  navHome: 'Home',
+  navPackages: 'Packages',
+  navLiveTv: 'Live TV',
+  navMedia: 'Media & FTP',
+  navSpeed: 'Speed Test',
+  navSupport: 'Support',
+  navNewConn: 'New Connection',
+  navAdmin: 'Admin',
+  noticeBadge: 'Notice',
+  heroBadge: 'High-Speed Broadband Service',
+  heroTitle: 'High-speed Fiber Optic Broadband',
+  heroDesc: 'Check your package, expiry, live TV and current due bill in one click easily.',
+  menuPkg: 'Packages',
+  menuTv: 'Live TV',
+  menuMedia: 'Media',
+  menuSpeed: 'Speed Test',
+  menuSupport: 'Support',
+  menuNewLine: 'New Line',
+  selfCareTitle: 'Customer Self Care Portal',
+  selfCareSub: 'Enter your mobile number to check your bill and package',
+  btnSearch: 'Search'
+ }
+};
+
 function applyLang() {
+ const dict = LANG_DATA[currentLang] || LANG_DATA.bn;
  document.querySelectorAll('[data-lang]').forEach(e => {
-  if (!e.dataset.bn) e.dataset.bn = e.textContent;
-  e.textContent = currentLang === 'en' ? (EN[e.dataset.lang] || e.dataset.bn) : e.dataset.bn;
+  const key = e.dataset.lang;
+  if (dict[key]) e.textContent = dict[key];
  });
  $('langBtnText').textContent = currentLang === 'en' ? 'বাং' : 'EN';
  document.documentElement.lang = currentLang;
 }
-function toggleLanguage() { currentLang = currentLang === 'en' ? 'bn' : 'en'; localStorage.setItem('peoples_lang', currentLang); applyLang(); }
+
+function toggleLanguage() { 
+ currentLang = currentLang === 'en' ? 'bn' : 'en'; 
+ localStorage.setItem('peoples_lang', currentLang); 
+ applyLang(); 
+}
 
 /* ---------- Firestore realtime ---------- */
 db.collection('livetv').onSnapshot(s => { liveTvChannels = s.docs.map(d => ({id:d.id, ...d.data()})); renderTv(); }, e => console.error(e));
 db.collection('mediasites').onSnapshot(s => { mediaSites = s.docs.map(d => ({id:d.id, ...d.data()})); renderMedia(); }, e => console.error(e));
+db.collection('connection_requests').onSnapshot(s => { reqs = s.docs.map(d => ({id:d.id, ...d.data()})); $('reqCount').textContent = reqs.length; renderReqs(); }, e => console.error(e));
+db.collection('support_tickets').onSnapshot(s => { tickets = s.docs.map(d => ({id:d.id, ...d.data()})); $('ticketCount').textContent = tickets.length; renderTickets(); }, e => console.error(e));
+db.collection('settings').doc('notice').onSnapshot(d => { if(d.exists && d.data().text) $('noticeTextContent').textContent = d.data().text; }, e => {});
 
-/* ---------- Customer search ---------- */
+/* ---------- Customer search & Upgrade trigger ---------- */
 async function searchClient() {
  const m = normMobile($('clientSearchInput').value), r = $('clientResult');
  r.classList.remove('hidden');
  if (!m) { r.innerHTML = '<p class="text-rose-500 text-center text-sm">সঠিক মোবাইল নম্বর দিন (যেমন 01580441506)।</p>'; return; }
- r.innerHTML = '<p class="text-center text-slate-500 text-sm">খোঁজা হচ্ছে...</p>';
+ r.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400 text-sm">খোঁজা হচ্ছে...</p>';
  try {
   const d = await db.collection('subscribers').doc(m).get();
   if (!d.exists) { r.innerHTML = '<p class="text-rose-500 text-center text-sm">এই নম্বরে কোনো গ্রাহক পাওয়া যায়নি।</p>'; return; }
   const s = d.data(), active = s.status === 'active', due = Number(s.due) || 0;
-  r.innerHTML = `<div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 text-sm space-y-2">
-   <div class="flex justify-between items-center"><p class="font-bold text-slate-900 text-base">${esc(s.name)}</p>
-   <span class="text-xs px-2 py-0.5 rounded font-bold ${active?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${active?'Active':'Suspended'}</span></div>
-   <p class="text-slate-600">মোবাইল: ${esc(s.mobile)}</p>
-   <p class="text-sky-700">প্যাকেজ: ${esc(s.package)}</p>
-   <p class="text-amber-600">মেয়াদ: ${esc(s.expires)}</p>
-   <p class="font-bold ${due>0?'text-rose-600':'text-emerald-600'}">${due>0?'বকেয়া: ৳'+due:'কোনো বকেয়া নেই'}</p></div>`;
+  r.innerHTML = `<div class="bg-sky-50/50 dark:bg-slate-800 p-5 rounded-2xl border border-sky-100 dark:border-slate-700 text-sm space-y-3">
+   <div class="flex justify-between items-center"><p class="font-bold text-slate-900 dark:text-white text-base">${esc(s.name)}</p>
+   <span class="text-xs px-2.5 py-1 rounded-full font-bold ${active?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${active?'Active':'Suspended'}</span></div>
+   <p class="text-slate-600 dark:text-slate-300">মোবাইল: ${esc(s.mobile)}</p>
+   <p class="text-sky-700 dark:text-sky-400 font-medium">প্যাকেজ: ${esc(s.package)}</p>
+   <p class="text-amber-600 dark:text-amber-400">মেয়াদ: ${esc(s.expires)}</p>
+   <p class="font-bold ${due>0?'text-rose-600':'text-emerald-600'}">${due>0?'বকেয়া: ৳'+due:'কোনো বকেয়া নেই'}</p>
+   <button onclick="openUpgradeModal('${esc(s.mobile)}', '${esc(s.package)}')" class="mt-2 w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs transition">প্যাকেজ আপগ্রেড রিকোয়েস্ট পাঠান</button></div>`;
  } catch (e) { r.innerHTML = '<p class="text-rose-500 text-center text-sm">ডাটা আনা যায়নি।</p>'; }
+}
+
+function openUpgradeModal(mobile, pkg) {
+ $('upgClientMobile').value = mobile;
+ $('upgCurrentPkg').value = pkg;
+ show('upgradeModal');
+}
+
+async function submitUpgradeRequest() {
+ const mobile = $('upgClientMobile').value;
+ const currentPkg = $('upgCurrentPkg').value;
+ const targetPkg = $('upgTargetPkg').value;
+
+ try {
+  await db.collection('support_tickets').add({
+   name: 'Package Upgrade (' + mobile + ')',
+   mobile: mobile,
+   issue: `প্যাকেজ পরিবর্তনের আবেদন: ${currentPkg} থেকে ${targetPkg}`,
+   status: 'Pending',
+   date: new Date().toLocaleDateString('bn-BD'),
+   createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  alert('আপনার প্যাকেজ আপগ্রেড রিকোয়েস্ট সফলভাবে জমা হয়েছে!');
+  hide('upgradeModal');
+ } catch (e) {
+  alert('ত্রুটি: ' + e.message);
+ }
+}
+
+/* ---------- Support Ticket Submission ---------- */
+async function submitSupportTicket() {
+ const name = $('supName').value.trim();
+ const mobile = normMobile($('supMobile').value);
+ const issue = $('supIssue').value.trim();
+
+ if (!name || !mobile || !issue) {
+  alert('দয়া করে নাম/কোড, মোবাইল এবং সমস্যার বিবরণ লিখুন।');
+  return;
+ }
+
+ try {
+  await db.collection('support_tickets').add({
+   name, mobile, issue, status: 'Pending',
+   date: new Date().toLocaleDateString('bn-BD'),
+   createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  alert('আপনার কমপ্লেইন বা সাপোর্ট টিকিট সফলভাবে জমা হয়েছে। দ্রুত সমাধান করা হবে।');
+  $('supName').value = '';
+  $('supMobile').value = '';
+  $('supIssue').value = '';
+  hide('supportModal');
+ } catch (e) {
+  alert('ত্রুটি: ' + e.message);
+ }
+}
+
+/* ---------- Notice Board Update ---------- */
+async function updateNoticeBoard() {
+ const text = $('adminNoticeInput').value.trim();
+ if (!text) return alert('নোটিশ লিখুন।');
+ try {
+  await db.collection('settings').doc('notice').set({ text });
+  alert('নোটিশ সফলভাবে আপডেট হয়েছে!');
+  $('adminNoticeInput').value = '';
+ } catch(e) { alert(e.message); }
+}
+
+/* ---------- New Connection Request Submission ---------- */
+async function submitNewConnection() {
+ const name = $('reqName').value.trim();
+ const mobile = normMobile($('reqMobile').value);
+ const address = $('reqAddress').value.trim();
+ const packageVal = $('reqPackage').value;
+
+ if (!name || !mobile || !address) {
+  alert('দয়া করে নাম, সঠিক মোবাইল নম্বর এবং ঠিকানা পূরণ করুন।');
+  return;
+ }
+
+ try {
+  await db.collection('connection_requests').add({
+   name, mobile, address, package: packageVal,
+   date: new Date().toLocaleDateString('bn-BD'),
+   createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  const whatsappNumber = "8801580441506";
+  const message = `🔔 *নতুন ইন্টারনেট সংযোগের আবেদন*\n\n👤 নাম: ${name}\n📱 মোবাইল: ${mobile}\n📍 ঠিকানা: ${address}\n📦 প্যাকেজ: ${packageVal}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  alert('আপনার আবেদন সফলভাবে জমা হয়েছে! WhatsApp-এ রিডাইরেক্ট করা হচ্ছে।');
+  $('reqName').value = ''; $('reqMobile').value = ''; $('reqAddress').value = '';
+  hide('newConnectionModal');
+  window.open(whatsappUrl, '_blank');
+ } catch (e) {
+  alert('আবেদন জমা দিতে সমস্যা হয়েছে: ' + e.message);
+ }
 }
 
 /* ---------- Admin ---------- */
@@ -264,12 +589,13 @@ function switchTab(tab) {
  if (tab === 'admin') { switchAdminTab('subscribers'); loadSubs(); } else { subs = []; $('adminTableBody').innerHTML = ''; }
 }
 function switchAdminTab(t) {
- const map = {subscribers:'adminTabSubscribers', livetv:'adminTabLivetv', media:'adminTabMedia'};
+ const map = {subscribers:'adminTabSubscribers', requests:'adminTabRequests', tickets:'adminTabTickets', notices:'adminTabNotices', livetv:'adminTabLivetv', media:'adminTabMedia'};
  Object.entries(map).forEach(([k,id]) => $(id).classList.toggle('hidden', k !== t));
  document.querySelectorAll('[data-atab]').forEach(b => {
   const on = b.dataset.atab === t;
   b.classList.toggle('bg-sky-600', on); b.classList.toggle('text-white', on);
-  b.classList.toggle('bg-sky-100', !on); b.classList.toggle('text-sky-700', !on);
+  b.classList.toggle('bg-slate-100', !on); b.classList.toggle('text-slate-700', !on);
+  b.classList.toggle('dark:bg-slate-800', !on); b.classList.toggle('dark:text-slate-200', !on);
  });
 }
 async function loadSubs() {
@@ -278,13 +604,37 @@ async function loadSubs() {
 }
 function renderSubs() {
  $('subCount').textContent = subs.length;
- $('adminTableBody').innerHTML = subs.map(s => `<tr class="hover:bg-sky-50/50">
-  <td class="p-3 font-bold">${esc(s.code)}</td><td class="p-3">${esc(s.name)}</td><td class="p-3">${esc(s.mobile)}</td>
-  <td class="p-3">${esc(s.package)}</td>
+ $('adminTableBody').innerHTML = subs.map(s => `<tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition">
+  <td class="p-3 font-bold text-slate-900 dark:text-white">${esc(s.code)}</td><td class="p-3 text-slate-700 dark:text-slate-300">${esc(s.name)}</td><td class="p-3 text-slate-600 dark:text-slate-400">${esc(s.mobile)}</td>
+  <td class="p-3 text-slate-600 dark:text-slate-400">${esc(s.package)}</td>
   <td class="p-3"><span class="text-xs px-2 py-0.5 rounded font-bold ${s.status==='active'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${esc(s.status)}</span></td>
   <td class="p-3 text-amber-600 font-semibold">${esc(s.expires)}</td><td class="p-3 font-bold text-rose-600">৳${esc(s.due)}</td>
-  <td class="p-3"><button data-paid="${esc(s.id)}" class="bg-emerald-600 text-white text-xs px-2 py-1 rounded-lg font-bold">Paid</button></td>
-  <td class="p-3"><a href="https://wa.me/880${esc(String(s.mobile).replace(/^0/,''))}" target="_blank" rel="noopener" class="bg-emerald-600 text-white text-xs px-2 py-1 rounded-lg inline-block"><i class="fa-brands fa-whatsapp"></i></a></td></tr>`).join('');
+  <td class="p-3"><button data-paid="${esc(s.id)}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1.5 rounded-xl font-bold transition">Paid</button></td>
+  <td class="p-3"><a href="https://wa.me/880${esc(String(s.mobile).replace(/^0/,''))}" target="_blank" rel="noopener" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1.5 rounded-xl inline-block transition"><i class="fa-brands fa-whatsapp"></i></a></td></tr>`).join('');
+}
+function renderReqs() {
+ $('adminReqTableBody').innerHTML = reqs.map(r => `<tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition">
+  <td class="p-3 text-slate-500 text-xs">${esc(r.date || 'তারিখ নেই')}</td>
+  <td class="p-3 font-bold text-slate-900 dark:text-white">${esc(r.name)}</td>
+  <td class="p-3 text-slate-600 dark:text-slate-400">${esc(r.mobile)}</td>
+  <td class="p-3 text-slate-600 dark:text-slate-400">${esc(r.address)}</td>
+  <td class="p-3 text-sky-700 dark:text-sky-400 font-semibold">${esc(r.package)}</td>
+  <td class="p-3 space-x-2">
+   <a href="https://wa.me/880${esc(String(r.mobile).replace(/^0/,''))}" target="_blank" rel="noopener" class="bg-emerald-600 text-white text-xs px-2.5 py-1.5 rounded-xl inline-block"><i class="fa-brands fa-whatsapp"></i></a>
+   <button data-delreq="${esc(r.id)}" class="text-rose-600 hover:text-rose-700 font-bold text-xs">ডিলিট</button>
+  </td></tr>`).join('');
+}
+function renderTickets() {
+ $('adminTicketTableBody').innerHTML = tickets.map(t => `<tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition">
+  <td class="p-3 text-slate-500 text-xs">${esc(t.date || '')}</td>
+  <td class="p-3 font-bold text-slate-900 dark:text-white">${esc(t.name)}</td>
+  <td class="p-3 text-slate-600 dark:text-slate-400">${esc(t.mobile)}</td>
+  <td class="p-3 text-slate-700 dark:text-slate-300 max-w-xs truncate">${esc(t.issue)}</td>
+  <td class="p-3"><span class="text-xs px-2 py-0.5 rounded font-bold ${t.status==='Resolved'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${esc(t.status || 'Pending')}</span></td>
+  <td class="p-3 space-x-2">
+   <button data-resolveticket="${esc(t.id)}" class="bg-sky-600 text-white text-xs px-2.5 py-1 rounded-lg">সলভ</button>
+   <button data-delticket="${esc(t.id)}" class="text-rose-600 font-bold text-xs">ডিলিট</button>
+  </td></tr>`).join('');
 }
 async function markPaid(id) {
  try { await db.collection('subscribers').doc(id).update({due:0}); const s = subs.find(x => x.id === id); if (s) s.due = 0; renderSubs(); }
@@ -324,7 +674,7 @@ async function resetSubs() {
   while (true) {
    const s = await db.collection('subscribers').limit(400).get();
    if (s.empty) break;
-   const b = db.batch(); s.docs.forEach(d => b.delete(d.ref)); await b.commit(); n += s.size;
+   const b = db.batch(); s.docs.forEach(d => d.ref.delete()); await b.commit(); n += s.size;
   }
   alert(n + ' টি গ্রাহকের ডাটা মুছে ফেলা হয়েছে।'); loadSubs();
  } catch (e) { alert('রিসেট ব্যর্থ: ' + e.message); }
@@ -360,23 +710,31 @@ async function addLiveTV() {
 async function addMediaSite() {
  const title = $('newMediaTitle').value.trim(), url = $('newMediaUrl').value.trim();
  if (!title || !url) return alert('নাম এবং লিংক দিন।');
- try { await db.collection('mediasites').add({title, url}); $('newMediaTitle').value = ''; $('newMediaUrl').value = ''; alert('সেভ হয়েছে!'); }
+ try { await db.collection('mediasites').add({title, url}); $('newMediaTitle').value = ''; $('newMediaUrl').value = ''; alert('চ্যানেল সেভ হয়েছে!'); }
  catch (e) { alert('সেভ ব্যর্থ: ' + e.message); }
 }
 function renderTv() {
  $('tvCount').textContent = liveTvChannels.length;
- $('clientTvList').innerHTML = liveTvChannels.map((c, i) => `<button data-play="${i}" class="tv-focusable bg-slate-800 hover:bg-sky-600 text-white text-xs p-2.5 rounded-xl text-left truncate border border-slate-700"><b class="text-sky-400 mr-1">${i+1}</b>${esc(c.title)}</button>`).join('');
- $('adminTvList').innerHTML = liveTvChannels.map((c, i) => `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-sky-200 text-xs"><span class="truncate"><b>${i+1}.</b> ${esc(c.title)}</span><div class="space-x-2"><button data-play="${i}" class="bg-sky-600 text-white px-2.5 py-1 rounded-lg font-bold">টেস্ট প্লে</button><button data-del="livetv:${esc(c.id)}" class="text-rose-600 font-bold">ডিলিট</button></div></div>`).join('');
+ $('clientTvList').innerHTML = liveTvChannels.map((c, i) => `<button data-play="${i}" class="tv-focusable bg-slate-800 hover:bg-sky-600 text-white text-xs p-3 rounded-xl text-left truncate border border-slate-700 transition"><b class="text-sky-400 mr-1.5">${i+1}</b>${esc(c.title)}</button>`).join('');
+ $('adminTvList').innerHTML = liveTvChannels.map((c, i) => `<div class="flex justify-between items-center bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white"><span class="truncate"><b>${i+1}.</b> ${esc(c.title)}</span><div class="space-x-2"><button data-play="${i}" class="bg-sky-600 hover:bg-sky-700 text-white px-3 py-1 rounded-lg font-bold transition">টেস্ট প্লে</button><button data-del="livetv:${esc(c.id)}" class="text-rose-600 font-bold hover:underline">ডিলিট</button></div></div>`).join('');
 }
 function renderMedia() {
- $('clientMediaList').innerHTML = mediaSites.map(m => `<a href="${esc(m.url)}" target="_blank" rel="noopener" class="tv-focusable block p-3.5 bg-sky-50 border border-sky-200 rounded-xl text-sm font-medium"><i class="fa-solid fa-film text-blue-600 mr-2"></i>${esc(m.title)}</a>`).join('');
- $('adminMediaList').innerHTML = mediaSites.map(m => `<div class="flex justify-between items-center bg-white p-3 rounded-xl border border-sky-200 text-xs"><span class="truncate">${esc(m.title)}</span><button data-del="mediasites:${esc(m.id)}" class="text-rose-600 font-bold ml-2">ডিলিট</button></div>`).join('');
+ $('clientMediaList').innerHTML = mediaSites.map(m => `<a href="${esc(m.url)}" target="_blank" rel="noopener" class="tv-focusable block p-3.5 bg-slate-50 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 rounded-2xl text-sm font-medium text-slate-700 dark:text-slate-200 transition"><i class="fa-solid fa-film text-sky-600 mr-2.5"></i>${esc(m.title)}</a>`).join('');
+ $('adminMediaList').innerHTML = mediaSites.map(m => `<div class="flex justify-between items-center bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white"><span class="truncate">${esc(m.title)}</span><button data-del="mediasites:${esc(m.id)}" class="text-rose-600 font-bold ml-2 hover:underline">ডিলিট</button></div>`).join('');
 }
 function showMediaModal() { renderMedia(); show('mediaModal'); }
+
 document.addEventListener('click', e => {
  const p = e.target.closest('[data-play]'), d = e.target.closest('[data-del]'), pd = e.target.closest('[data-paid]');
+ const delReq = e.target.closest('[data-delreq]');
+ const delTicket = e.target.closest('[data-delticket]');
+ const resolveTicket = e.target.closest('[data-resolveticket]');
+
  if (p) { playChannel(+p.dataset.play); showLiveTVModal(); }
  if (pd) markPaid(pd.dataset.paid);
+ if (delReq && confirm('এই আবেদনটি ডিলিট করতে চান?')) { db.collection('connection_requests').doc(delReq.dataset.delreq).delete().catch(err => alert(err.message)); }
+ if (delTicket && confirm('এই টিকিটটি ডিলিট করতে চান?')) { db.collection('support_tickets').doc(delTicket.dataset.delticket).delete().catch(err => alert(err.message)); }
+ if (resolveTicket) { db.collection('support_tickets').doc(resolveTicket.dataset.resolveticket).update({status: 'Resolved'}).catch(err => alert(err.message)); }
  if (d && confirm('ডিলিট করবেন?')) { const [col, id] = d.dataset.del.split(':'); db.collection(col).doc(id).delete().catch(err => alert(err.message)); }
 });
 
