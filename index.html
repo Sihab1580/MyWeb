@@ -44,12 +44,13 @@
 
 <main class="max-w-7xl mx-auto px-3 my-6">
  <div id="clientView" class="space-y-4">
-  <!-- মোবাইল ভিউয়ের জন্য ফাস্ট এক্সেস মেনু (লাইভ টিভি সহ যুক্ত করা হয়েছে) -->
-  <div class="md:hidden grid grid-cols-4 gap-2 text-[11px] font-bold text-center">
-    <button onclick="show('packagesModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-box block text-sky-600 text-lg mb-1"></i>প্যাকেজ</button>
-    <button onclick="showLiveTVModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-tv block text-sky-600 text-lg mb-1"></i>লাইভ টিভি</button>
-    <button onclick="showMediaModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-film block text-sky-600 text-lg mb-1"></i>মিডিয়া</button>
-    <button onclick="show('speedTestModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm"><i class="fa-solid fa-gauge-high block text-sky-600 text-lg mb-1"></i>স্পিড</button>
+  
+  <!-- ফাস্ট এক্সেস মেনু (এখন সব ডিভাইসে তথা বড় স্ক্রিন ও মোবাইলে সবসময় শো করবে) -->
+  <div class="max-w-2xl mx-auto grid grid-cols-4 gap-2 text-[11px] font-bold text-center">
+    <button onclick="show('packagesModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-box block text-sky-600 text-lg mb-1"></i>প্যাকেজ</button>
+    <button onclick="showLiveTVModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-tv block text-sky-600 text-lg mb-1"></i>লাইভ টিভি</button>
+    <button onclick="showMediaModal()" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-film block text-sky-600 text-lg mb-1"></i>মিডিয়া</button>
+    <button onclick="show('speedTestModal')" class="bg-white border border-sky-100 rounded-xl py-3 shadow-sm hover:bg-sky-50 transition"><i class="fa-solid fa-gauge-high block text-sky-600 text-lg mb-1"></i>স্পিড</button>
   </div>
 
   <div class="bg-white rounded-2xl shadow-xl p-5 sm:p-10 max-w-2xl mx-auto border border-sky-100">
